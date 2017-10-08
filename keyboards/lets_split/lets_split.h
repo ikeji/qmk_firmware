@@ -8,6 +8,8 @@
     #include "rev2.h"
 #elif KEYBOARD_lets_split_sockets
     #include "sockets.h"
+#elif KEYBOARD_lets_split_left
+    #include "left.h"
 #endif
 
 
