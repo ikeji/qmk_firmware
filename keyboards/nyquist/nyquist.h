@@ -9,6 +9,10 @@
 #ifdef KEYBOARD_nyquist_rev3
     #include "rev3.h"
 #endif
+#ifdef KEYBOARD_nyquist_ikejiv
+    #include "ikejiv.h"
+#endif
+
 
 #include "quantum.h"
 
