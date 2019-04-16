@@ -15,8 +15,17 @@
 #define XXXXXXX KC_NO
 
 #define CANDE   CTL_T(KC_ESC)
+#define AANDT   ALT_T(KC_TAB)
+#define SANDE   SFT_T(KC_ENT)
+#define SANDS   SFT_T(KC_SPC)
 #define FN_BACK LALT(KC_LEFT)
 #define FN_FORD LALT(KC_RGHT)
+#define FN_BACK LALT(KC_LEFT)
+#define FN_FORD LALT(KC_RGHT)
+#define EANDL   LT(_L, KC_ENT)
+#define EANDR   LT(_R, KC_ENT)
+#define EANDG   GUI_T(KC_ENT)
+#define EANDLG  LT(_GUI, KC_ENT)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -24,7 +33,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC, \
   CANDE ,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT, \
   KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_ENT , \
-  MO(_FN), KC_LCTL, KC_LALT, KC_LGUI, MO(_L),  KC_SPC,  KC_SPC,  MO(_R),  MO(_GUI),KC_RGUI, KC_RSFT, MO(_FN) \
+  MO(_FN), KC_LCTL, KC_LALT, KC_LGUI, EANDL,   SANDS,   SANDS,   EANDR,   MO(_GUI),KC_RGUI, KC_RSFT, MO(_FN) \
 ),
 
 [_L] = LAYOUT( \
@@ -51,6 +60,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ),
 
 #undef G
+
 
 [_FN] =  LAYOUT( \
   _______, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  _______, \
