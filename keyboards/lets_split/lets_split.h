@@ -10,6 +10,8 @@
     #include "sockets.h"
 #elif KEYBOARD_lets_split_left
     #include "left.h"
+#elif KEYBOARD_lets_split_right
+    #include "right.h"
 #endif
 
 
