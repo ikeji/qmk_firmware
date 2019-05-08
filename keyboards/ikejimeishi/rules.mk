@@ -1,3 +1,4 @@
+SRC += matrix.c
 # MCU name
 #MCU = at90usb1286
 MCU = atmega328p
@@ -60,7 +61,7 @@ BOOTLOADER = atmel-dfu
 # OPT_DEFS += -DBOOTLOADER_SIZE=4096
 OPT_DEFS += -DBOOTLOADER_SIZE=2048
 
-PROGRAM_CMD = avrdude -c usbasp -p m328 -U flash:w:$(BUILD_DIR)/$(TARGET).hex
+PROGRAM_CMD = avrdude -c usbasp -p m328p -U flash:w:$(BUILD_DIR)/$(TARGET).hex
 
 # Build Options
 #   change yes to no to disable
@@ -82,3 +83,5 @@ BLUETOOTH_ENABLE = no       # Enable Bluetooth with the Adafruit EZ-Key HID
 AUDIO_ENABLE = no           # Audio output on port C6
 FAUXCLICKY_ENABLE = no      # Use buzzer to emulate clicky switches
 HD44780_ENABLE = no 		# Enable support for HD44780 based LCDs (+400)
+
+CUSTOM_MATRIX = yes
