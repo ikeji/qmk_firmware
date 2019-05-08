@@ -301,34 +301,71 @@ static bool read_rows_on_col(matrix_row_t current_matrix[], uint8_t current_col)
 #endif
 
 #define TIME_A 100
-#define TIME_B 10
+
+void setSclToLow(void) {
+  setPinOutput(SOFT_SERIAL_PIN_SCL);
+  writePinLow(SOFT_SERIAL_PIN_SCL);
+}
+
+void setSclToHigh(void) {
+  setPinInputHigh(SOFT_SERIAL_PIN_SCL);
+}
+
+void setSdaToLow(void) {
+  setPinOutput(SOFT_SERIAL_PIN_SDA);
+  writePinLow(SOFT_SERIAL_PIN_SDA);
+}
+
+void setSdaToHigh(void) {
+  setPinInputHigh(SOFT_SERIAL_PIN_SDA);
+}
+
+void waitForSdaLow(void) {
+  while(readPin(SOFT_SERIAL_PIN_SDA) != 0);
+}
+
+void waitForSdaHigh(void) {
+  while(readPin(SOFT_SERIAL_PIN_SDA) == 0);
+}
+
+void waitForSclLow(void) {
+  while(readPin(SOFT_SERIAL_PIN_SCL) != 0);
+}
+
+void waitForSclHigh(void) {
+  while(readPin(SOFT_SERIAL_PIN_SCL) == 0);
+}
 
 void matrix_init(void) {
 
     // initialize key pins
     init_pins();
 
-    setPinInputHigh(SOFT_SERIAL_PIN);
+    setSdaToHigh();
+    setSclToHigh();
 
 #ifdef IS_RIGHT
+    cli();
     while(1) {
-      while(readPin(SOFT_SERIAL_PIN) != 0);
-      while(readPin(SOFT_SERIAL_PIN) == 0);
-      wait_us(TIME_A);
+      setSdaToHigh();
+      waitForSdaLow();
+      waitForSclHigh();
       for (int row = 0; row < ROWS_PER_HAND; row++) {
         for (int col = 0; col < MATRIX_COLS; col++) {
           pin_t pin = direct_pins[row][col];
+          waitForSclLow();
+          while(readPin(SOFT_SERIAL_PIN_SCL) == 0);
           if (readPin(pin) == 0) {
-            setPinOutput(SOFT_SERIAL_PIN);
-            writePinLow(SOFT_SERIAL_PIN);
+            setSdaToLow();
           } else {
-            setPinInputHigh(SOFT_SERIAL_PIN);
+            setSdaToHigh();
           }
-          wait_us(TIME_B);
-          setPinInputHigh(SOFT_SERIAL_PIN);
+          waitForSclHigh();
         }
       }
+      waitForSclLow();
     }
+    sei();
 #endif
 
     // initialize matrix state: all keys off
@@ -359,21 +396,20 @@ uint8_t matrix_scan(void)
 #endif
 
 #ifdef IS_LEFT
-  cli();
-  setPinOutput(SOFT_SERIAL_PIN);
-  writePinLow(SOFT_SERIAL_PIN);
+  setSclToLow();
+  setSdaToLow();
+  setSclToHigh();
   wait_us(TIME_A);
-  setPinInputHigh(SOFT_SERIAL_PIN);
-  wait_us(TIME_B/2);
   for (int row = 0; row < ROWS_PER_HAND; row++) {
     raw_matrix[row + ROWS_PER_HAND] = 0;
     for (int col = 0; col < MATRIX_COLS; col++) {
-      pin_t pin = direct_pins[row][col];
-      raw_matrix[row + ROWS_PER_HAND] |= readPin(pin) ? 0 : (ROW_SHIFTER << col);
-      wait_us(TIME_B);
+      setSclToLow();
+      wait_us(TIME_A);
+      setSclToHigh();
+      raw_matrix[row + ROWS_PER_HAND] |= readPin(SOFT_SERIAL_PIN_SDA) ? 0 : (ROW_SHIFTER << col);
     }
   }
-  sei();
+  setSclToLow();
 #endif
 
   debounce(raw_matrix, matrix, MATRIX_ROWS, changed);
