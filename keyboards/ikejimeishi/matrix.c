@@ -354,11 +354,10 @@ void matrix_init(void) {
         for (int col = 0; col < MATRIX_COLS; col++) {
           pin_t pin = direct_pins[row][col];
           waitForSclLow();
-          while(readPin(SOFT_SERIAL_PIN_SCL) == 0);
           if (readPin(pin) == 0) {
-            setSdaToLow();
-          } else {
             setSdaToHigh();
+          } else {
+            setSdaToLow();
           }
           waitForSclHigh();
         }
@@ -397,17 +396,22 @@ uint8_t matrix_scan(void)
 
 #ifdef IS_LEFT
   setSclToLow();
+  wait_us(TIME_A);
   setSdaToLow();
   setSclToHigh();
   wait_us(TIME_A);
   for (int row = 0; row < ROWS_PER_HAND; row++) {
+    matrix_row_t last_row_value = raw_matrix[row + ROWS_PER_HAND];
     raw_matrix[row + ROWS_PER_HAND] = 0;
     for (int col = 0; col < MATRIX_COLS; col++) {
       setSclToLow();
+      setSdaToHigh();
       wait_us(TIME_A);
       setSclToHigh();
+      wait_us(TIME_A);
       raw_matrix[row + ROWS_PER_HAND] |= readPin(SOFT_SERIAL_PIN_SDA) ? 0 : (ROW_SHIFTER << col);
     }
+    changed |= last_row_value != raw_matrix[row + ROWS_PER_HAND];
   }
   setSclToLow();
 #endif
