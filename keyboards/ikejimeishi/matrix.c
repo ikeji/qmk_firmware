@@ -409,7 +409,7 @@ uint8_t matrix_scan(void)
       wait_us(TIME_A);
       setSclToHigh();
       wait_us(TIME_A);
-      raw_matrix[row + ROWS_PER_HAND] |= readPin(SOFT_SERIAL_PIN_SDA) ? 0 : (ROW_SHIFTER << col);
+      raw_matrix[row + ROWS_PER_HAND] |= (!readPin(SOFT_SERIAL_PIN_SDA)) ? 0 : (ROW_SHIFTER << col);
     }
     changed |= last_row_value != raw_matrix[row + ROWS_PER_HAND];
   }

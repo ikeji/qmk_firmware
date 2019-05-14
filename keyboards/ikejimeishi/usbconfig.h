@@ -33,7 +33,7 @@ section at the end of this file).
 /* This is the bit number in USB_CFG_IOPORT where the USB D- line is connected.
  * This may be any bit in the port.
  */
-#define USB_CFG_DPLUS_BIT       4
+#define USB_CFG_DPLUS_BIT       3
 /* This is the bit number in USB_CFG_IOPORT where the USB D+ line is connected.
  * This may be any bit in the port. Please note that D+ must also be connected
  * to interrupt pin INT0! [You can also use other interrupts, see section
@@ -109,7 +109,7 @@ section at the end of this file).
  * (e.g. HID), but never want to send any data. This option saves a couple
  * of bytes in flash memory and the transmit buffers in RAM.
  */
-#define USB_CFG_INTR_POLL_INTERVAL      1
+#define USB_CFG_INTR_POLL_INTERVAL      10
 /* If you compile a version with endpoint 1 (interrupt-in), this is the poll
  * interval. The value is in milliseconds and must not be less than 10 ms for
  * low speed devices.
@@ -394,13 +394,23 @@ section at the end of this file).
 // #define USB_INTR_PENDING_BIT    INTF1
 // #define USB_INTR_VECTOR         INT1_vect
 
-#define USB_INTR_CFG            PCICR
-#define USB_INTR_CFG_SET        (1 << PCIE2)
-/* #define USB_INTR_CFG_CLR        0 */
-#define USB_INTR_ENABLE         PCMSK2
-#define USB_INTR_ENABLE_BIT     PCINT20
-#define USB_INTR_PENDING        PCIFR
-#define USB_INTR_PENDING_BIT    PCIF2
-#define USB_INTR_VECTOR         PCINT2_vect
+// PCINT19
+// #define USB_INTR_CFG            PCICR
+// #define USB_INTR_CFG_SET        (1 << PCIE2)
+// /* #define USB_INTR_CFG_CLR        0 */
+// #define USB_INTR_ENABLE         PCMSK2
+// #define USB_INTR_ENABLE_BIT     PCINT19
+// #define USB_INTR_PENDING        PCIFR
+// #define USB_INTR_PENDING_BIT    PCIF2
+// #define USB_INTR_VECTOR         PCINT2_vect
+
+// #define USB_INTR_CFG            MCUCR
+#define USB_INTR_CFG_SET        ((1 << ISC10) | (1 << ISC11))
+// #define USB_INTR_CFG_CLR        0
+// #define USB_INTR_ENABLE         GIMSK
+#define USB_INTR_ENABLE_BIT     INT1
+// #define USB_INTR_PENDING        GIFR
+#define USB_INTR_PENDING_BIT    INTF1
+#define USB_INTR_VECTOR         INT1_vect
 
 #endif /* __usbconfig_h_included__ */
