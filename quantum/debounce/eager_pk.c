@@ -37,7 +37,12 @@ No further inputs are accepted until DEBOUNCE milliseconds have occurred.
 
 #define debounce_counter_t uint8_t
 
-static debounce_counter_t *debounce_counters;
+#ifdef SPLIT_KEYBOARD
+static debounce_counter_t debounce_counters[MATRIX_COLS * MATRIX_ROWS / 2];
+#else
+static debounce_counter_t debounce_counters[MATRIX_COLS * MATRIX_ROWS];
+#endif
+
 static bool                counters_need_update;
 
 #define DEBOUNCE_ELAPSED 251
@@ -48,7 +53,6 @@ void transfer_matrix_values(matrix_row_t raw[], matrix_row_t cooked[], uint8_t n
 
 // we use num_rows rather than MATRIX_ROWS to support split keyboards
 void debounce_init(uint8_t num_rows) {
-  debounce_counters = (debounce_counter_t *)malloc(num_rows * MATRIX_COLS * sizeof(debounce_counter_t));
   int i             = 0;
   for (uint8_t r = 0; r < num_rows; r++) {
     for (uint8_t c = 0; c < MATRIX_COLS; c++) {
