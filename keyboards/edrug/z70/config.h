@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* USB Device descriptor parameter */
 #define VENDOR_ID       0xFEED
-#define PRODUCT_ID      0xE234
+#define PRODUCT_ID      0xEDDE
 #define DEVICE_VER      0x0001
 #define USB_MAX_POWER_CONSUMPTION 100
 /* in python2: list(u"whatever".encode('utf-16-le')) */
