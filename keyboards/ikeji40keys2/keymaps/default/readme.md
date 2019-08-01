@@ -1,0 +1,1 @@
+# The default keymap for ikeji40keys2
