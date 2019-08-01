@@ -26,23 +26,26 @@ enum custom_keycodes {
   MYKEY = SAFE_RANGE,
 };
 
-#define ALT_M   ALT_T(KC_M)
-#define ALT_X   ALT_T(KC_X)
-#define ALT_DOT ALT_T(KC_DOT)
-#define CTR_ESC CTL_T(KC_ESC)
-#define CTR_SLA CTL_T(KC_SLSH)
-#define DOWN_B  LT(_DOWN, KC_B)
-#define DOWN_V  LT(_DOWN, KC_V)
-#define FN_ENT  LT(_FN, KC_ENT)
-#define FN_Z    LT(_FN, KC_Z)
-#define GUI_C   GUI_T(KC_C)
-#define GUI_COM GUI_T(KC_COMM)
-#define GUI_N   GUI_T(KC_N)
-#define SFT_SPC SFT_T(KC_SPC)
-#define UP_B    LT(_UP, KC_B)
-#define UP_M    LT(_UP, KC_M)
-#define UP_N    LT(_UP, KC_N)
-#define UP_V    LT(_UP, KC_V)
+#define ALT_M    ALT_T(KC_M)
+#define ALT_X    ALT_T(KC_X)
+#define ALT_DOT  ALT_T(KC_DOT)
+#define CTR_ESC  CTL_T(KC_ESC)
+#define CTR_A    CTL_T(KC_A)
+#define CTR_SLA  CTL_T(KC_SLSH)
+#define CTR_SCN  CTL_T(KC_SCLN)
+#define DOWN_B   LT(_DOWN, KC_B)
+#define DOWN_V   LT(_DOWN, KC_V)
+#define FN_ENT   LT(_FN, KC_ENT)
+#define FN_Z     LT(_FN, KC_Z)
+#define GUI_C    GUI_T(KC_C)
+#define GUI_COM  GUI_T(KC_COMM)
+#define GUI_N    GUI_T(KC_N)
+#define SFT_SPC  SFT_T(KC_SPC)
+#define SFT_SLA  SFT_T(KC_SLSH)
+#define UP_B     LT(_UP, KC_B)
+#define UP_M     LT(_UP, KC_M)
+#define UP_N     LT(_UP, KC_N)
+#define UP_V     LT(_UP, KC_V)
 
 #define _______ KC_TRNS
 #define XXXXXXX KC_NO
@@ -50,8 +53,8 @@ enum custom_keycodes {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_BASE] = LAYOUT(
         KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,
-        KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN,
-        FN_Z,    ALT_X,   GUI_C,   DOWN_V,  DOWN_B,  UP_N,    UP_M,    GUI_COM, ALT_DOT, CTR_SLA
+        CTR_A,   KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    CTR_SCN,
+        FN_Z,    ALT_X,   GUI_C,   DOWN_V,  DOWN_B,  UP_N,    UP_M,    GUI_COM, ALT_DOT, SFT_SLA
   ),
   [_UP] = LAYOUT(
         KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,
@@ -65,8 +68,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
   [_FN] = LAYOUT(
         KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10, 
-        KC_F11,  KC_F12,  KC_HOME, KC_END,  _______, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_PGUP,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
+        KC_F11,  KC_F12,  KC_HOME, KC_END,  KC_TAB,  KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_PGUP,
+        _______, _______, KC_ESC,  _______, KC_BSPC, KC_SPC,  KC_ENT,  _______, _______, _______
   ),
 //[] = LAYOUT(
 //      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
