@@ -15,10 +15,84 @@
  */
 
 #include "double.h"
+#include "pointing_device.h"
 
 // Optional override functions below.
 // You can leave any or all of these undefined.
 // These are only required if you want to perform custom actions.
+
+
+report_mouse_t mouse_rep;
+
+#define SDIO D1
+#define SCK  D0
+#define CS   D4
+
+void matrix_init_kb(void) {
+    matrix_init_user();
+    setPinOutput(SDIO);
+    writePinLow(SDIO);
+    setPinOutput(SCK);
+    writePinLow(SCK);
+    setPinOutput(CS);
+    writePinLow(CS);
+    wait_us(1);
+    writePinHigh(CS);
+}
+
+uint8_t read(unsigned char addr) {
+  uint8_t temp;
+  writePinLow(CS);
+  temp = addr;
+  writePinLow(SCK);
+
+  setPinOutput(SDIO);
+  for (int8_t n=0;n<8;n++){
+    writePinLow(SCK);
+    if (temp & 0x80) {
+      writePinHigh(SDIO);
+    } else {
+      writePinLow(SDIO);
+    }
+    wait_us(2);
+    temp <<=1;
+    writePinHigh(SCK);
+  }
+
+  temp=0;
+  setPinInput(SDIO);
+  for (int8_t n=0;n<8;n++){
+    wait_us(1);
+    writePinLow(SCK);
+    wait_us(1);
+    temp<<=1;
+    if (readPin(SDIO) != 0) {
+      temp |= 0x01;
+    }
+    writePinHigh(SCK);
+  }
+  wait_us(20);
+  writePinHigh(CS);
+  return temp;
+}
+
+int conv(uint8_t from) {
+  if (from > 128) {
+    return ((int)from) - 256;
+  } else {
+    return from;
+  }
+}
+
+void matrix_scan_kb(void) {
+    matrix_scan_user();
+    mouse_rep.buttons = 0;
+    mouse_rep.h=0;
+    mouse_rep.v=0;
+    mouse_rep.x=conv(read(0x03))*-2;
+    mouse_rep.y=conv(read(0x04))*-3;
+    pointing_device_set_report(mouse_rep);
+}
 
 /*
 void matrix_init_kb(void) {
