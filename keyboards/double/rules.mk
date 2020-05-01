@@ -43,3 +43,4 @@ HD44780_ENABLE = no         # Enable support for HD44780 based LCDs
 
 SPLIT_KEYBOARD = yes
 POINTING_DEVICE_ENABLE = yes
+R_TRACKBALL_ENABLE = yes
