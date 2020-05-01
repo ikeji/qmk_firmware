@@ -4,6 +4,58 @@
 #include "config.h"
 #include "matrix.h"
 #include "quantum.h"
+#include "pointing_device.h"
+
+#ifdef R_TRACKBALL_ENABLE
+
+#define SDIO D1
+#define SCK  D0
+#define CS   D4
+
+uint8_t readxxx(unsigned char addr) {
+  uint8_t temp;
+  writePinLow(CS);
+  temp = addr;
+  writePinLow(SCK);
+
+  setPinOutput(SDIO);
+  for (int8_t n=0;n<8;n++){
+    writePinLow(SCK);
+    if (temp & 0x80) {
+      writePinHigh(SDIO);
+    } else {
+      writePinLow(SDIO);
+    }
+    wait_us(2);
+    temp <<=1;
+    writePinHigh(SCK);
+  }
+
+  temp=0;
+  setPinInput(SDIO);
+  for (int8_t n=0;n<8;n++){
+    wait_us(1);
+    writePinLow(SCK);
+    wait_us(1);
+    temp<<=1;
+    if (readPin(SDIO) != 0) {
+      temp |= 0x01;
+    }
+    writePinHigh(SCK);
+  }
+  wait_us(20);
+  writePinHigh(CS);
+  return temp;
+}
+
+int convxxx(uint8_t from) {
+  if (from > 128) {
+    return ((int)from) - 256;
+  } else {
+    return from;
+  }
+}
+#endif
 
 #define ROWS_PER_HAND (MATRIX_ROWS / 2)
 
@@ -136,6 +188,10 @@ typedef struct _Serial_s2m_buffer_t {
     uint8_t      encoder_state[NUMBER_OF_ENCODERS];
 #    endif
 
+#    ifdef R_TRACKBALL_ENABLE
+    int8_t trackball_x;
+    int8_t trackball_y;
+#    endif
 } Serial_s2m_buffer_t;
 
 typedef struct _Serial_m2s_buffer_t {
@@ -194,7 +250,17 @@ SSTD_t transactions[] = {
 
 void transport_master_init(void) { soft_serial_initiator_init(transactions, TID_LIMIT(transactions)); }
 
-void transport_slave_init(void) { soft_serial_target_init(transactions, TID_LIMIT(transactions)); }
+void transport_slave_init(void) { 
+  soft_serial_target_init(transactions, TID_LIMIT(transactions));
+    setPinOutput(SDIO);
+    writePinLow(SDIO);
+    setPinOutput(SCK);
+    writePinLow(SCK);
+    setPinOutput(CS);
+    writePinLow(CS);
+    wait_us(1);
+    writePinHigh(CS);
+}
 
 #    if defined(RGBLIGHT_ENABLE) && defined(RGBLIGHT_SPLIT)
 
@@ -251,6 +317,21 @@ bool transport_master(matrix_row_t matrix[]) {
     // Write wpm to slave
     serial_m2s_buffer.current_wpm = get_current_wpm();
 #    endif
+
+#    ifdef R_TRACKBALL_ENABLE
+    if (serial_s2m_buffer.trackball_x !=0||
+        serial_s2m_buffer.trackball_y !=0){
+      //print("hoge\n");
+      //xprintf("%02X\n", serial_s2m_buffer.trackball_y);
+      report_mouse_t mouse_rep;
+      mouse_rep.buttons = 0;
+      mouse_rep.h=0;
+      mouse_rep.v=0;
+      mouse_rep.y=-serial_s2m_buffer.trackball_y;
+      mouse_rep.x=-serial_s2m_buffer.trackball_x;
+      pointing_device_set_report(mouse_rep);
+    }
+#    endif
     return true;
 }
 
@@ -270,6 +351,18 @@ void transport_slave(matrix_row_t matrix[]) {
 
 #    ifdef WPM_ENABLE
     set_current_wpm(serial_m2s_buffer.current_wpm);
+#    endif
+
+#    ifdef R_TRACKBALL_ENABLE
+    // TODO
+    if (status0 != 10) {
+      serial_s2m_buffer.trackball_x = convxxx(readxxx(0x03));
+      serial_s2m_buffer.trackball_y = convxxx(readxxx(0x04));
+      status0 = 10;
+    } else {
+      serial_s2m_buffer.trackball_x += convxxx(readxxx(0x03));
+      serial_s2m_buffer.trackball_y += convxxx(readxxx(0x04));
+    }
 #    endif
 }
 

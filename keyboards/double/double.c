@@ -40,7 +40,7 @@ void matrix_init_kb(void) {
     writePinHigh(CS);
 }
 
-uint8_t read(unsigned char addr) {
+uint8_t readxxxxx(unsigned char addr) {
   uint8_t temp;
   writePinLow(CS);
   temp = addr;
@@ -76,7 +76,7 @@ uint8_t read(unsigned char addr) {
   return temp;
 }
 
-int conv(uint8_t from) {
+int convxxxxx(uint8_t from) {
   if (from > 128) {
     return ((int)from) - 256;
   } else {
@@ -86,12 +86,14 @@ int conv(uint8_t from) {
 
 void matrix_scan_kb(void) {
     matrix_scan_user();
+    /*
     mouse_rep.buttons = 0;
-    mouse_rep.h=-conv(read(0x03))/2;
-    mouse_rep.v=conv(read(0x04))/2;
+    mouse_rep.h=-convxxxxx(readxxxxx(0x03))/2;
+    mouse_rep.v=convxxxxx(readxxxxx(0x04))/2;
     mouse_rep.y=0;
     mouse_rep.x=0;
     pointing_device_set_report(mouse_rep);
+    */
 }
 
 /*
