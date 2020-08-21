@@ -38,6 +38,8 @@ enum custom_keycodes {
 #define EANDR   LT(_R, KC_ENT)
 #define EANDG   GUI_T(KC_ENT)
 #define EANDLG  LT(_GUI, KC_ENT)
+#define MBTN1   KC_MS_BTN1
+#define MBTN2   KC_MS_BTN2
 
 #define _______ KC_TRNS
 #define XXXXXXX KC_NO
@@ -68,7 +70,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 [_GUI] =  LAYOUT( \
   _______, G(KC_1), G(KC_2), G(KC_3), G(KC_4), G(KC_5), G(KC_6), G(KC_7), G(KC_8), G(KC_9), G(KC_0), _______, \
-  _______, G(KC_Q), G(KC_W), G(KC_E), G(KC_R), _______, _______, _______, _______, _______, _______, _______, \
+  _______, G(KC_Q), G(KC_W), G(KC_E), G(KC_R), _______, KC_INS,  _______, _______, _______, _______, _______, \
   _______, G(KC_Z), G(KC_X), G(KC_C), G(KC_V), _______, _______, _______, _______, _______, _______, _______, \
   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______ \
 ),
@@ -78,8 +80,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 [_FN] =  LAYOUT( \
   RESET,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_DEL,  \
-  _______, KC_F11,  KC_F12,  _______, _______, _______, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_PGUP, _______, \
-  _______, _______, _______, _______, _______, _______, KC_HOME, KC_END,  FN_BACK, FN_FORD, KC_PGDN, _______, \
+  _______, KC_F11,  KC_F12,  _______, _______, _______, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_PGUP, KC_HOME, \
+  _______, _______, _______, _______, _______, _______, MBTN1,   MBTN2,   FN_BACK, FN_FORD, KC_PGDN, KC_END, \
   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______ \
 ),
 
