@@ -321,7 +321,8 @@ bool transport_master(matrix_row_t matrix[]) {
 #    ifdef R_TRACKBALL_ENABLE
     if (serial_s2m_buffer.trackball_x !=0||
         serial_s2m_buffer.trackball_y !=0){
-      //print("hoge\n");
+      /*
+      print("send report\n");
       //xprintf("%02X\n", serial_s2m_buffer.trackball_y);
       report_mouse_t mouse_rep;
       mouse_rep.buttons = 0;
@@ -330,6 +331,7 @@ bool transport_master(matrix_row_t matrix[]) {
       mouse_rep.y=-serial_s2m_buffer.trackball_y;
       mouse_rep.x=-serial_s2m_buffer.trackball_x;
       pointing_device_set_report(mouse_rep);
+      */
     }
 #    endif
     return true;
