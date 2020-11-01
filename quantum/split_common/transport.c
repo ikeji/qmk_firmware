@@ -12,6 +12,9 @@
 #define SCK  D0
 #define CS   D4
 
+extern int mousemove_y;
+extern int mousemove_x;
+
 uint8_t readxxx(unsigned char addr) {
   uint8_t temp;
   writePinLow(CS);
@@ -321,6 +324,8 @@ bool transport_master(matrix_row_t matrix[]) {
 #    ifdef R_TRACKBALL_ENABLE
     if (serial_s2m_buffer.trackball_x !=0||
         serial_s2m_buffer.trackball_y !=0){
+      mousemove_y += -serial_s2m_buffer.trackball_y*5;
+      mousemove_x += -serial_s2m_buffer.trackball_x*5;
       /*
       print("send report\n");
       //xprintf("%02X\n", serial_s2m_buffer.trackball_y);
