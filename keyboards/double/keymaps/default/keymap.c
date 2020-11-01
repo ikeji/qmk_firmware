@@ -14,6 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include QMK_KEYBOARD_H
+#include "pointing_device.h"
 
 #define _BASE 0
 #define _L 1
@@ -24,6 +25,9 @@
 // Defines the keycodes used by our macros in process_record_user
 enum custom_keycodes {
   MYKEY = SAFE_RANGE,
+  MBTN1,
+  MBTN2,
+  MBTN3
 };
 
 #define CANDE   CTL_T(KC_ESC)
@@ -38,8 +42,8 @@ enum custom_keycodes {
 #define EANDR   LT(_R, KC_ENT)
 #define EANDG   GUI_T(KC_ENT)
 #define EANDLG  LT(_GUI, KC_ENT)
-#define MBTN1   KC_MS_BTN1
-#define MBTN2   KC_MS_BTN2
+//#define MBTN1   KC_MS_BTN1
+//#define MBTN2   KC_MS_BTN2
 
 #define _______ KC_TRNS
 #define XXXXXXX KC_NO
@@ -54,9 +58,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 [_L] = LAYOUT( \
   KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_BSPC, \
-  _______, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_UNDS, KC_PLUS, KC_LCBR, KC_RCBR, KC_PIPE, \
-  _______, KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,S(KC_NUHS),S(KC_NUBS),_______,_______,_______, \
-  _______, _______, _______, _______, _______, KC_ENT,  KC_ENT,  _______, KC_MNXT, KC_VOLD, KC_VOLU, KC_MPLY \
+  _______, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   MBTN1,   KC_UNDS, KC_PLUS, KC_LCBR, KC_RCBR, KC_PIPE, \
+  _______, KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  MBTN2, S(KC_NUHS),S(KC_NUBS),_______,_______,_______, \
+  _______, _______, _______, _______, _______, KC_ENT,  MBTN1,   MBTN2,   KC_MNXT, KC_VOLD, KC_VOLU, KC_MPLY \
 ),
 
 [_R] = LAYOUT( \
@@ -100,3 +104,38 @@ uint16_t get_tapping_term(uint16_t keycode) {
       return 500;
   }
 }
+
+report_mouse_t currentReport;
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {
+    case MBTN1:
+      currentReport = pointing_device_get_report();
+      if (record->event.pressed) {
+        currentReport.buttons |= MOUSE_BTN1;
+      } else {
+        currentReport.buttons &= ~MOUSE_BTN1;
+      }
+      pointing_device_set_report(currentReport);
+      return false;
+    case MBTN2:
+      currentReport = pointing_device_get_report();
+      if (record->event.pressed) {
+        currentReport.buttons |= MOUSE_BTN2;
+      } else {
+        currentReport.buttons &= ~MOUSE_BTN2;
+      }
+      pointing_device_set_report(currentReport);
+      return false;
+    case MBTN3:
+      currentReport = pointing_device_get_report();
+      if (record->event.pressed) {
+        currentReport.buttons |= MOUSE_BTN3;
+      } else {
+        currentReport.buttons &= ~MOUSE_BTN3;
+      }
+      pointing_device_set_report(currentReport);
+      return false;
+  }
+  return true;
+}
+
