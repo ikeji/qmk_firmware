@@ -89,13 +89,13 @@ int convxxxxx(uint8_t from) {
 void matrix_scan_kb(void) {
     matrix_scan_user();
     mouse_rep = pointing_device_get_report();
-    //mouse_rep.h=-convxxxxx(readxxxxx(0x03))/5;
-    //mouse_rep.v=convxxxxx(readxxxxx(0x04))/5;
-    mouse_rep.x=-convxxxxx(readxxxxx(0x03))*3;
-    mouse_rep.y=-convxxxxx(readxxxxx(0x04))*3;
-    //mouse_rep.y=mousemove_y;
+    mouse_rep.h=-convxxxxx(readxxxxx(0x03))/5;
+    mouse_rep.v=convxxxxx(readxxxxx(0x04))/5;
+    //mouse_rep.x=-convxxxxx(readxxxxx(0x03))*3;
+    //mouse_rep.y=-convxxxxx(readxxxxx(0x04))*3;
+    mouse_rep.y+=mousemove_y;
     mousemove_y=0;
-    //mouse_rep.x=mousemove_x;
+    mouse_rep.x+=mousemove_x;
     mousemove_x=0;
     pointing_device_set_report(mouse_rep);
 }
