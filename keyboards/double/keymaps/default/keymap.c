@@ -52,8 +52,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_BASE] = LAYOUT( \
   KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC, \
   CANDE ,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT, \
-  KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, _______, \
-  MO(_FN), KC_LCTL, KC_LALT, KC_LGUI, EANDL,   SANDS,   SANDS,   EANDR,   MO(_GUI),KC_RGUI, KC_RSFT, MO(_FN) \
+  _______, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, _______, \
+  MO(_FN), KC_LCTL, KC_LALT, KC_LGUI, EANDL,   SANDS,   SANDS,   EANDR,   MO(_GUI),KC_RGUI, _______, MO(_FN) \
 ),
 
 [_L] = LAYOUT( \
@@ -106,8 +106,17 @@ uint16_t get_tapping_term(uint16_t keycode) {
 }
 
 report_mouse_t currentReport;
+bool layer_pressed;
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
+    case EANDL:
+    case EANDR:
+      if (record->event.pressed) {
+        layer_pressed = true;
+      } else {
+        layer_pressed = false;
+      }
+      return true;
     case MBTN1:
       currentReport = pointing_device_get_report();
       if (record->event.pressed) {

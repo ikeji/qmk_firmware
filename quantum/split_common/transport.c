@@ -324,8 +324,8 @@ bool transport_master(matrix_row_t matrix[]) {
 #    ifdef R_TRACKBALL_ENABLE
     if (serial_s2m_buffer.trackball_x !=0||
         serial_s2m_buffer.trackball_y !=0){
-      mousemove_y += -serial_s2m_buffer.trackball_y*3;
-      mousemove_x += -serial_s2m_buffer.trackball_x*3;
+      mousemove_y += -serial_s2m_buffer.trackball_y;
+      mousemove_x += -serial_s2m_buffer.trackball_x;
       /*
       print("send report\n");
       //xprintf("%02X\n", serial_s2m_buffer.trackball_y);
