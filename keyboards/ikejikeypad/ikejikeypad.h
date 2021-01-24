@@ -26,10 +26,16 @@
  * The second converts the arguments into a two-dimensional array which
  * represents the switch matrix.
  */
+#define KNO KC_NO
 #define LAYOUT( \
-    k00, k01, k02, \
-      k10,  k12    \
+    k04, k03, k02, k01, \
+    k14, k13, k12, k10, \
+    k24, k23, k21, k20, \
+    k34, k32, k31, k30 \
 ) { \
-    { k00, k01,   k02 }, \
-    { k10, KC_NO, k12 }  \
+    { KNO, k01, k02, k03, k04 }, \
+    { k10, KNO, k12, k13, k14 }, \
+    { k20, k21, KNO, k23, k24 }, \
+    { k30, k31, k32, KNO, k34 }, \
+    { KNO, KNO, KNO, KNO, KNO }, \
 }
