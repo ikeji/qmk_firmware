@@ -39,6 +39,7 @@ enum custom_keycodes {
 #define FN_BACK LALT(KC_LEFT)
 #define FN_FORD LALT(KC_RGHT)
 #define EANDL   LT(_L, KC_ENT)
+#define BANDL   LT(_L, KC_BSPC)
 #define EANDR   LT(_R, KC_ENT)
 #define EANDG   GUI_T(KC_ENT)
 #define EANDLG  LT(_GUI, KC_ENT)
@@ -50,10 +51,10 @@ enum custom_keycodes {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_BASE] = LAYOUT( \
-  KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC, \
+  KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    _______, \
   CANDE ,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT, \
   _______, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, _______, \
-  MO(_FN), KC_LCTL, KC_LALT, KC_LGUI, EANDL,   SANDS,   SANDS,   EANDR,   MO(_GUI),KC_RGUI, _______, MO(_FN) \
+  MO(_FN), KC_LCTL, KC_LALT, KC_LGUI, BANDL,   SANDS,   SANDS,   EANDR,   MO(_GUI),KC_RGUI, _______, MO(_FN) \
 ),
 
 [_L] = LAYOUT( \
