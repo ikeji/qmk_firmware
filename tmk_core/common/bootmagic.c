@@ -157,7 +157,9 @@ static bool scan_keycode(uint8_t keycode) {
  * FIXME: needs doc
  */
 bool bootmagic_scan_keycode(uint8_t keycode) {
+#ifndef BOOTMAGIC_SKIP_SALT
     if (!scan_keycode(BOOTMAGIC_KEY_SALT)) return false;
+#endif
 
     return scan_keycode(keycode);
 }
