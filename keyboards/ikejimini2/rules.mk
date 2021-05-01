@@ -1,8 +1,11 @@
 # MCU name
-MCU = atmega32u4
+MCU = STM32F103
 
 # Bootloader selection
-BOOTLOADER = atmel-dfu
+BOOTLOADER = stm32duino
+
+# Enter lower-power sleep mode when on the ChibiOS idle thread
+OPT_DEFS += -DCORTEX_ENABLE_WFI_IDLE=TRUE
 
 # Build Options
 #   change yes to no to disable
