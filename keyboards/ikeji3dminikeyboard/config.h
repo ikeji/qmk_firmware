@@ -27,8 +27,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define PRODUCT      ikeji3dminikeyboard
 
 /* key matrix size */
-#define MATRIX_ROWS 2
-#define MATRIX_COLS 3
+#define MATRIX_ROWS 8
+#define MATRIX_COLS 6
 
 /*
  * Keyboard Matrix Assignments
@@ -40,17 +40,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *                  ROW2COL = ROW = Anode (+), COL = Cathode (-, marked on diode)
  *
  */
-#define MATRIX_ROW_PINS { A6, A7 }
-#define MATRIX_COL_PINS { A0, A1, A2 }
+#define MATRIX_ROW_PINS { A6, A7, B0, B1 }
+//#define MATRIX_COL_PINS { A0, A1, A2, A3, A4, A5 }
+#define MATRIX_COL_PINS { A5, A4, A3, A2, A1, A0 }
 #define UNUSED_PINS
 
 /* COL2ROW, ROW2COL */
-#define DIODE_DIRECTION COL2ROW
+#define DIODE_DIRECTION ROW2COL
 
 /*
  * Split Keyboard specific options, make sure you have 'SPLIT_KEYBOARD = yes' in your rules.mk, and define SOFT_SERIAL_PIN.
  */
-#define SOFT_SERIAL_PIN D0  // or D1, D2, D3, E6
+#define SOFT_SERIAL_PIN B8  // or D1, D2, D3, E6
 
 //#define LED_NUM_LOCK_PIN B0
 //#define LED_CAPS_LOCK_PIN B1
