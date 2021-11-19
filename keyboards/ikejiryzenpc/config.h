@@ -13,8 +13,8 @@
 #define PRODUCT      ikejiryzenpc
 
 /* key matrix size */
-#define MATRIX_ROWS 2
-#define MATRIX_COLS 3
+#define MATRIX_ROWS 10
+#define MATRIX_COLS 10
 
 /*
  * Keyboard Matrix Assignments
@@ -26,8 +26,8 @@
  *                  ROW2COL = ROW = Anode (+), COL = Cathode (-, marked on diode)
  *
  */
-#define MATRIX_ROW_PINS { D0, D5 }
-#define MATRIX_COL_PINS { F1, F0, B0 }
+#define MATRIX_ROW_PINS { B7, B6, B5, B4, B3, A15, B12, B13, B14, B15 }
+#define MATRIX_COL_PINS { B12, B13, B14, B15, B7, B6, B5, B4, B3, A15 }
 #define UNUSED_PINS
 
 /* COL2ROW, ROW2COL */
@@ -36,7 +36,7 @@
 /*
  * Split Keyboard specific options, make sure you have 'SPLIT_KEYBOARD = yes' in your rules.mk, and define SOFT_SERIAL_PIN.
  */
-#define SOFT_SERIAL_PIN D0  // or D1, D2, D3, E6
+//#define SOFT_SERIAL_PIN D0  // or D1, D2, D3, E6
 
 //#define LED_NUM_LOCK_PIN B0
 //#define LED_CAPS_LOCK_PIN B1

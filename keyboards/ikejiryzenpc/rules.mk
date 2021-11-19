@@ -1,8 +1,8 @@
 # MCU name
-MCU = atmega32u4
+MCU = STM32F103
 
 # Bootloader selection
-BOOTLOADER = atmel-dfu
+BOOTLOADER = stm32duino
 
 # Build Options
 #   change yes to no to disable
