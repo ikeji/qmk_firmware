@@ -16,6 +16,8 @@
 #define MATRIX_ROWS 10
 #define MATRIX_COLS 10
 
+#define MATRIX_MASKED
+
 /*
  * Keyboard Matrix Assignments
  *
@@ -26,12 +28,12 @@
  *                  ROW2COL = ROW = Anode (+), COL = Cathode (-, marked on diode)
  *
  */
-#define MATRIX_ROW_PINS { B7, B6, B5, B4, B3, A15, B12, B13, B14, B15 }
-#define MATRIX_COL_PINS { B12, B13, B14, B15, B7, B6, B5, B4, B3, A15 }
+#define MATRIX_ROW_PINS { B12, B13, B14, B15, B7, B6, B5, B4, B3, A15 }
+#define MATRIX_COL_PINS { B7, B6, B5, B4, B3, A15, B12, B13, B14, B15 }
 #define UNUSED_PINS
 
 /* COL2ROW, ROW2COL */
-#define DIODE_DIRECTION COL2ROW
+#define DIODE_DIRECTION ROW2COL
 
 /*
  * Split Keyboard specific options, make sure you have 'SPLIT_KEYBOARD = yes' in your rules.mk, and define SOFT_SERIAL_PIN.
