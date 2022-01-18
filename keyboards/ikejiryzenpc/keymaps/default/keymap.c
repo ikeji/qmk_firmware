@@ -2,6 +2,9 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #include QMK_KEYBOARD_H
+#include "analog.h"
+#include "pointing_device.h"
+#include "print.h"
 
 #define _BASE 0
 #define _L 1
@@ -28,6 +31,11 @@ enum custom_keycodes {
 #define EANDG   GUI_T(KC_ENT)
 #define EANDLG  LT(_GUI, KC_ENT)
 
+
+#define MBTN1   KC_MS_BTN1
+#define MBTN2   KC_MS_BTN2
+#define MBTN3   KC_MS_BTN3
+
 #define _______ KC_TRNS
 #define XXXXXXX KC_NO
 
@@ -43,14 +51,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC, KC_AMPR,   KC_ASTR, KC_LPRN, KC_RPRN, KC_BSPC, \
   _______, _______, _______, _______, _______, _______, _______, KC_UNDS,   KC_PLUS, KC_LCBR, KC_RCBR, KC_PIPE, \
   _______, _______, _______, _______, _______, _______, _______, S(KC_NUHS),S(KC_NUBS),_______,_______,_______, \
-  _______, _______, _______, _______, _______, _______, _______, _______,   _______, _______, _______, _______ \
+  _______, _______, _______, _______, _______, MBTN1,   MBTN2,   MBTN3,   _______, _______, _______, _______ \
 ),
 
 [_R] = LAYOUT( \
   KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSPC, \
   _______, _______, _______, _______, _______, _______, _______, KC_MINS, KC_EQL,  KC_LBRC, KC_RBRC, KC_BSLS, \
   _______, _______, _______, _______, _______, _______, _______, KC_NUHS, KC_NUBS, _______, _______, _______, \
-  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______ \
+  _______, _______, _______, _______, _______, MBTN1,   MBTN2,   _______, _______, _______, _______, _______ \
 ),
 
 #define G(kc) LGUI(kc)
@@ -86,4 +94,115 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     default:
       return 500;
   }
+}
+
+// Joystick
+// Set Pins
+// uint8_t xPin  = 8;   // VRx / /B4
+// uint8_t yPin  = 7;   // VRy // B5
+// uint8_t swPin = E6;  // SW
+
+// Set Parameters
+uint16_t minAxisValue = 150;
+uint16_t maxAxisValue = 830;
+
+uint8_t maxCursorSpeed = 5;
+uint8_t precisionSpeed = 1;
+uint8_t speedRegulator = 20;  // Lower Values Create Faster Movement
+
+int8_t xPolarity = 1;
+int8_t yPolarity = 1;
+
+uint8_t cursorTimeout = 10;
+
+int32_t xOrigin, yOrigin;
+
+uint16_t lastCursor = 0;
+
+int16_t axisCoordinate(pin_t pin, uint16_t origin) {
+    int8_t  direction;
+    int16_t distanceFromOrigin;
+    int16_t range;
+
+    int16_t position = analogReadPin(pin);
+//    printf("position: %d\n", position);
+
+    if (origin == position) {
+        return 0;
+    } else if (origin > position) {
+        distanceFromOrigin = origin - position;
+        range              = origin - minAxisValue;
+        direction          = -1;
+    } else {
+        distanceFromOrigin = position - origin;
+        range              = maxAxisValue - origin;
+        direction          = 1;
+    }
+
+    float   percent    = (float)distanceFromOrigin / range;
+    int16_t coordinate = (int16_t)(percent * 100);
+    if (coordinate < 0) {
+        return 0;
+    } else if (coordinate > 100) {
+        return 100 * direction;
+    } else {
+        return coordinate * direction;
+    }
+}
+
+int8_t axisToMouseComponent(pin_t pin, int16_t origin, uint8_t maxSpeed, int8_t polarity) {
+    int coordinate = axisCoordinate(pin, origin);
+    if (coordinate != 0) {
+        float percent = (float)coordinate / 100;
+        if (get_mods() & MOD_BIT(KC_LSFT)) {
+            return percent * precisionSpeed * (abs(coordinate) / speedRegulator) / polarity;
+        } else {
+            return percent * maxCursorSpeed * (abs(coordinate) / speedRegulator) / polarity;
+        }
+    } else {
+        return 0;
+    }
+}
+
+void pointing_device_task(void) {
+    report_mouse_t report = pointing_device_get_report();
+
+    // todo read as one vector
+    if (timer_elapsed(lastCursor) > cursorTimeout) {
+        lastCursor = timer_read();
+        if (layer_state_is(_R)) {
+          report.h   =   axisToMouseComponent(A0, xOrigin, 1, 15);
+          report.v   = - axisToMouseComponent(A1, yOrigin, 1, 15);
+        } else {
+          report.x   = axisToMouseComponent(A0, xOrigin, maxCursorSpeed, xPolarity);
+          report.y   = axisToMouseComponent(A1, yOrigin, maxCursorSpeed, yPolarity);
+        }
+    }
+    //
+    /*
+    if (!readPin(E6)) {
+        report.buttons |= MOUSE_BTN1;
+    } else {
+        report.buttons &= ~MOUSE_BTN1;
+    }
+    */
+
+    pointing_device_set_report(report);
+    pointing_device_send();
+}
+
+void pointing_device_init(void) {
+  // init pin? Is needed?
+  //setPinInputHigh(E6);
+  // Account for drift
+  xOrigin = 0;
+  for (int i=0;i<1000;i++) {
+    xOrigin += analogReadPin(A0);
+  }
+  xOrigin/=1000;
+  yOrigin = 0;
+  for (int i=0;i<1000;i++) {
+    yOrigin += analogReadPin(A1);
+  }
+  yOrigin/=1000;
 }
