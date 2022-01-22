@@ -24,6 +24,11 @@
 // Defines the keycodes used by our macros in process_record_user
 enum custom_keycodes {
   MYKEY = SAFE_RANGE,
+  MACRO1,
+  MACRO2,
+  MACRO3,
+  MACRO4,
+  MACRO5,
 };
 
 #define CANDE   CTL_T(KC_ESC)
@@ -80,11 +85,43 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_FN] =  LAYOUT( \
   RESET,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_DEL,  \
   _______, KC_F11,  KC_F12,  _______, _______, _______, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_PGUP, KC_HOME, \
-  _______, _______, _______, _______, _______, _______, _______, _______,   FN_BACK, FN_FORD, KC_PGDN, KC_END, \
+  _______, MACRO1,  MACRO2,  MACRO3,  MACRO4,  MACRO5,  _______, _______, FN_BACK, FN_FORD, KC_PGDN, KC_END, \
   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______ \
 ),
 
 };
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {
+    case MACRO1:
+      if (record->event.pressed) {
+        SEND_STRING(SS_LGUI("p") SS_DELAY(100) "keymacro.sh 1" SS_TAP(X_ENT));
+      }
+      break;
+    case MACRO2:
+      if (record->event.pressed) {
+        SEND_STRING(SS_LGUI("p") SS_DELAY(100) "keymacro.sh 2" SS_TAP(X_ENT));
+      }
+      break;
+    case MACRO3:
+      if (record->event.pressed) {
+        SEND_STRING(SS_LGUI("p") SS_DELAY(100) "keymacro.sh 3" SS_TAP(X_ENT));
+      }
+      break;
+    case MACRO4:
+      if (record->event.pressed) {
+        SEND_STRING(SS_LGUI("p") SS_DELAY(100) "keymacro.sh 4" SS_TAP(X_ENT));
+      }
+      break;
+    case MACRO5:
+      if (record->event.pressed) {
+        SEND_STRING(SS_LGUI("p") SS_DELAY(100) "keymacro.sh 5" SS_TAP(X_ENT));
+      }
+      break;
+  }
+  return true;
+}
+
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
