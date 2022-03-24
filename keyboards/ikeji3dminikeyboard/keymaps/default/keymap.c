@@ -95,27 +95,67 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case MACRO1:
       if (record->event.pressed) {
-        SEND_STRING(SS_LGUI("p") SS_DELAY(100) "keymacro.sh 1" SS_TAP(X_ENT));
+        register_code(KC_LGUI);
+        register_code(KC_LCTRL);
+        register_code(KC_LSFT);
+        register_code(KC_LALT);
+        tap_code(KC_1);
+        unregister_code(KC_LALT);
+        unregister_code(KC_LSFT);
+        unregister_code(KC_LCTRL);
+        unregister_code(KC_LGUI);
       }
       break;
     case MACRO2:
       if (record->event.pressed) {
-        SEND_STRING(SS_LGUI("p") SS_DELAY(100) "keymacro.sh 2" SS_TAP(X_ENT));
+        register_code(KC_LGUI);
+        register_code(KC_LCTRL);
+        register_code(KC_LSFT);
+        register_code(KC_LALT);
+        tap_code(KC_2);
+        unregister_code(KC_LALT);
+        unregister_code(KC_LSFT);
+        unregister_code(KC_LCTRL);
+        unregister_code(KC_LGUI);
       }
       break;
     case MACRO3:
       if (record->event.pressed) {
-        SEND_STRING(SS_LGUI("p") SS_DELAY(100) "keymacro.sh 3" SS_TAP(X_ENT));
+        register_code(KC_LGUI);
+        register_code(KC_LCTRL);
+        register_code(KC_LSFT);
+        register_code(KC_LALT);
+        tap_code(KC_3);
+        unregister_code(KC_LALT);
+        unregister_code(KC_LSFT);
+        unregister_code(KC_LCTRL);
+        unregister_code(KC_LGUI);
       }
       break;
     case MACRO4:
       if (record->event.pressed) {
-        SEND_STRING(SS_LGUI("p") SS_DELAY(100) "keymacro.sh 4" SS_TAP(X_ENT));
+        register_code(KC_LGUI);
+        register_code(KC_LCTRL);
+        register_code(KC_LSFT);
+        register_code(KC_LALT);
+        tap_code(KC_4);
+        unregister_code(KC_LALT);
+        unregister_code(KC_LSFT);
+        unregister_code(KC_LCTRL);
+        unregister_code(KC_LGUI);
       }
       break;
     case MACRO5:
       if (record->event.pressed) {
-        SEND_STRING(SS_LGUI("p") SS_DELAY(100) "keymacro.sh 5" SS_TAP(X_ENT));
+        register_code(KC_LGUI);
+        register_code(KC_LCTRL);
+        register_code(KC_LSFT);
+        register_code(KC_LALT);
+        tap_code(KC_5);
+        unregister_code(KC_LALT);
+        unregister_code(KC_LSFT);
+        unregister_code(KC_LCTRL);
+        unregister_code(KC_LGUI);
       }
       break;
   }
