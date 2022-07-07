@@ -45,7 +45,6 @@ enum custom_keycodes {
 #define EANDG   GUI_T(KC_ENT)
 #define EANDLG  LT(_GUI, KC_ENT)
 
-#define _______ KC_TRNS
 #define XXXXXXX KC_NO
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
