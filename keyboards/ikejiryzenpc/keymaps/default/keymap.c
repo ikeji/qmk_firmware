@@ -41,7 +41,6 @@ enum custom_keycodes {
 #define MBTN2   KC_MS_BTN2
 #define MBTN3   KC_MS_BTN3
 
-#define _______ KC_TRNS
 #define XXXXXXX KC_NO
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
