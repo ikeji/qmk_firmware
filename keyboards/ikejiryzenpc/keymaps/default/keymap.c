@@ -11,6 +11,7 @@
 #define _R 2
 #define _GUI 3
 #define _FN 6
+#define _MOUSE 7
 
 // Defines the keycodes used by our macros in process_record_user
 enum custom_keycodes {
@@ -52,22 +53,22 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ),
 
 [_L] = LAYOUT( \
-  KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC, KC_AMPR,   KC_ASTR, KC_LPRN, KC_RPRN, KC_BSPC, \
-  _______, _______, _______, _______, _______, _______, _______, KC_UNDS,   KC_PLUS, KC_LCBR, KC_RCBR, KC_PIPE, \
-  _______, _______, _______, _______, _______, _______, _______, S(KC_NUHS),S(KC_NUBS),_______,_______,_______, \
-  _______, _______, _______, _______, _______, MBTN1,   MBTN2,   MBTN3,   _______, _______, _______, _______ \
+  KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC,   KC_AMPR,   KC_ASTR, KC_LPRN, KC_RPRN, KC_BSPC, \
+  _______, _______, _______, _______, _______, _______, _______,   KC_UNDS,   KC_PLUS, KC_LCBR, KC_RCBR, KC_PIPE, \
+  _______, _______, _______, _______, _______, _______, _______,S(KC_NUHS),S(KC_NUBS), _______, _______, _______, \
+  _______, _______, _______, _______, _______, _______, _______,   _______,   _______, _______, _______, _______ \
 ),
 
 [_R] = LAYOUT( \
   KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSPC, \
   _______, _______, _______, _______, _______, _______, _______, KC_MINS, KC_EQL,  KC_LBRC, KC_RBRC, KC_BSLS, \
   _______, _______, _______, _______, _______, _______, _______, KC_NUHS, KC_NUBS, _______, _______, _______, \
-  _______, _______, _______, _______, _______, MBTN1,   MBTN2,   _______, _______, _______, _______, _______ \
+  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______ \
 ),
 
 #define G(kc) LGUI(kc)
 
-[_GUI] =  LAYOUT( \
+[_GUI] = LAYOUT( \
   _______, G(KC_1), G(KC_2), G(KC_3), G(KC_4), G(KC_5), G(KC_6), G(KC_7), G(KC_8), G(KC_9), G(KC_0), _______, \
   _______, G(KC_Q), G(KC_W), G(KC_E), G(KC_R), _______, KC_INS,  _______, _______, _______, _______, _______, \
   _______, G(KC_Z), G(KC_X), G(KC_C), G(KC_V), _______, _______, _______, _______, _______, _______, _______, \
@@ -77,15 +78,23 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 #undef G
 
 
-[_FN] =  LAYOUT( \
+[_FN] = LAYOUT( \
   RESET,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_DEL,  \
   _______, KC_F11,  KC_F12,  _______, _______, _______, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_PGUP, KC_HOME, \
   _______, MACRO1,  MACRO2,  MACRO3,  MACRO4,  MACRO5,  _______, _______, FN_BACK, FN_FORD, KC_PGDN, KC_END, \
   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______ \
 ),
 
+[_MOUSE] = LAYOUT( \
+  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
+  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
+  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
+  _______, _______, _______, _______, _______, MBTN1,   MBTN2,   MBTN3,   _______, _______, _______, _______ \
+),
+
 };
 
+uint8_t clicking = 0;
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
@@ -154,6 +163,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         unregister_code(KC_LGUI);
       }
       break;
+    case MBTN1:
+    case MBTN2:
+    case MBTN3:
+      if (record->event.pressed) {
+        clicking |= 1 << (keycode-MBTN1);
+      } else {
+        clicking &= ~(1 << (keycode-MBTN1));
+      }
+      break;
   }
   return true;
 }
@@ -193,7 +211,8 @@ uint8_t cursorTimeout = 10;
 
 int32_t xOrigin, yOrigin;
 
-uint16_t lastCursor = 0;
+uint16_t lastCursor = 0; // 最後にmouse reportを出した時刻
+uint16_t lastMouse = 0;  // 最後にマウスっぽい事をした時刻
 
 int16_t axisCoordinate(pin_t pin, uint16_t origin) {
     int8_t  direction;
@@ -246,30 +265,38 @@ void pointing_device_task(void) {
     // todo read as one vector
     if (timer_elapsed(lastCursor) > cursorTimeout) {
         lastCursor = timer_read();
-        if (layer_state_is(_R)) {
+        if (layer_state_is(_FN)) {
           report.h   =   axisToMouseComponent(A0, xOrigin, 1, 15);
           report.v   = - axisToMouseComponent(A1, yOrigin, 1, 15);
         } else {
           report.x   = axisToMouseComponent(A0, xOrigin, maxCursorSpeed, xPolarity);
           report.y   = axisToMouseComponent(A1, yOrigin, maxCursorSpeed, yPolarity);
         }
+        if (
+            report.h != 0 ||
+            report.v != 0 ||
+            report.x != 0 ||
+            report.y != 0 ||
+            false
+           ){
+          lastMouse = timer_read();
+        }
     }
-    //
-    /*
-    if (!readPin(E6)) {
-        report.buttons |= MOUSE_BTN1;
+
+    if (clicking != 0) {
+      lastMouse = timer_read();
+    }
+    if (timer_elapsed(lastMouse) < 1000) {
+      layer_on(_MOUSE);
     } else {
-        report.buttons &= ~MOUSE_BTN1;
+      layer_off(_MOUSE);
     }
-    */
 
     pointing_device_set_report(report);
     pointing_device_send();
 }
 
 void pointing_device_init(void) {
-  // init pin? Is needed?
-  //setPinInputHigh(E6);
   // Account for drift
   xOrigin = 0;
   for (int i=0;i<1000;i++) {
