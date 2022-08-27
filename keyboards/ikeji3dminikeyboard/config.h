@@ -41,7 +41,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 #define MATRIX_ROW_PINS { A6, A7, B0, B1 }
-//#define MATRIX_COL_PINS { A0, A1, A2, A3, A4, A5 }
 #define MATRIX_COL_PINS { A5, A4, A3, A2, A1, A0 }
 #define UNUSED_PINS
 
@@ -156,3 +155,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define TAPPING_TERM_PER_KEY
 #define PERMISSIVE_HOLD
+
+#define SELECT_SOFT_SERIAL_SPEED 3
+
