@@ -43,6 +43,7 @@
         ]
     },
     "processor": "STM32F401",
+    "development_board": "blackpill_f401",
     "url": "",
     "usb": {
         "device_version": "1.0.0",
