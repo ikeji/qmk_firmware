@@ -15,8 +15,6 @@
  */
 #include QMK_KEYBOARD_H
 
-#include <print.h>
-
 #define _BASE 0
 #define _L 1
 #define _R 2
@@ -93,21 +91,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 };
 
-void print_keyrecord(keyrecord_t *record) {
-  char map[] = " qwert" // 00 - 05
-               " asdfg" // 10 - 15
-               " zxcvb" // 20 - 25
-               "      " // 30 - 35
-               " poiuy" // 40 - 45
-               " ;lkjh" // 50 - 55
-               " /.,mn" // 60 - 65
-               "      " // 70 - 75
-               ;
-  uprintf("%c%c",
-      map[record->event.key.row*6+record->event.key.col],
-      record->event.pressed?'v':'^');
-}
-
 #define AGAIN_BUF_LEN 256
 
 void process_again(uint16_t keycode, keyrecord_t *record) {
@@ -115,13 +98,6 @@ void process_again(uint16_t keycode, keyrecord_t *record) {
   static bool repeating = false;
   if (repeating) return;
   if (keycode == AGAIN && record->event.pressed) {
-    print("process_again: ");
-    for (int i=0;i<AGAIN_BUF_LEN;i++) {
-      print_keyrecord(&buffer[i]);
-      print(" ");
-    }
-    print("\n");
-
     for (int i=(AGAIN_BUF_LEN-1)/2;i>=0;i--) {
       bool match = true;
       for (int j=0;j<i;j++) {
@@ -136,12 +112,8 @@ void process_again(uint16_t keycode, keyrecord_t *record) {
         }
       }
       if (match) {
-        uprintf("match %d chars \n", i);
         repeating = true;
         for (int j=0;j<i;j++) {
-          print("repeat ");
-          print_keyrecord(&buffer[AGAIN_BUF_LEN-1-i+1+j]);
-          print("\n");
           process_record(&buffer[AGAIN_BUF_LEN-1-i+1+j]);
         }
         repeating = false;
@@ -162,9 +134,6 @@ void process_again(uint16_t keycode, keyrecord_t *record) {
 
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  // print("process_record_user: ");
-  // print_keyrecord(record);
-  // print("\n");
   process_again(keycode, record);
   switch (keycode) {
     case MACRO1:
