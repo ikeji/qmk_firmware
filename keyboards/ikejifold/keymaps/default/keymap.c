@@ -27,3 +27,16 @@ void keyboard_post_init_user(void) {
   //debug_keyboard=true;
   //debug_mouse=true;
 }
+
+const matrix_row_t matrix_mask[MATRIX_ROWS] = {
+  0b0000000000111111,
+  0b0000000000111111,
+  0b0000000000111111,
+  0b0000000000111111,
+  0b0000001111000000,
+  0b0000001111000000,
+  0b0000001111000000,
+  0b0000001111000000,
+  0b0000001111000000,
+  0b0000001111000000,
+};
