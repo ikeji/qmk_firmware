@@ -100,9 +100,26 @@ void process_again(uint16_t keycode, keyrecord_t *record) {
   if (keycode == AGAIN && record->event.pressed) {
     for (int i=(AGAIN_BUF_LEN-1)/2;i>=0;i--) {
       bool match = true;
-      for (int j=0;j<i;j++) {
+      int j = 0;
+      int k = 0;
+      while(true) {
         keyrecord_t* a = &buffer[AGAIN_BUF_LEN-1-j];
-        keyrecord_t* b = &buffer[AGAIN_BUF_LEN-1-j-i];
+        while(j<i) {
+          if (a->event.pressed) break;
+          j++;
+          a = &buffer[AGAIN_BUF_LEN-1-j];
+        }
+        keyrecord_t* b = &buffer[AGAIN_BUF_LEN-1-k-i];
+        while(k<i) {
+          if (b->event.pressed) break;
+          k++;
+          b = &buffer[AGAIN_BUF_LEN-1-k-i];
+        }
+        if (j == i && k == i) break;
+        if (j==i || k==i) {
+          match = false;
+          break;
+        }
         if (a->event.key.row != b->event.key.row ||
             a->event.key.col != b->event.key.col ||
             a->event.pressed != b->event.pressed ||
@@ -110,6 +127,8 @@ void process_again(uint16_t keycode, keyrecord_t *record) {
           match = false;
           break;
         }
+        j++;
+        k++;
       }
       if (match) {
         repeating = true;
