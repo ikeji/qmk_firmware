@@ -16,6 +16,7 @@ enum custom_keycodes {
   MACRO3,
   MACRO4,
   MACRO5,
+  AGAIN,
 };
 
 #define CANDE   CTL_T(KC_ESC)
@@ -43,7 +44,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_BASE] = LAYOUT_ortho_4x14( \
   KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                     KC_Y, KC_U,  KC_I,    KC_O,    KC_P,    KC_BSPC, \
   CANDE ,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                     KC_H, KC_J,  KC_K,    KC_L,    KC_SCLN, KC_QUOT, \
-  KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,  _______, _______,  KC_N, KC_M,  KC_COMM, KC_DOT,  KC_SLSH, KC_ENT, \
+  KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,  _______, AGAIN,    KC_N, KC_M,  KC_COMM, KC_DOT,  KC_SLSH, KC_ENT, \
   MO(_FN), KC_LALT, KC_LCTL, KC_LGUI, BANDL,   SANDS, _______, _______,  SANDS,EANDR,MO(_GUI), KC_RGUI, KC_RALT, MO(_FN) \
 ),
 
@@ -82,7 +83,70 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 };
 
+#define AGAIN_BUF_LEN 256
+
+void process_again(uint16_t keycode, keyrecord_t *record) {
+  static keyrecord_t buffer[AGAIN_BUF_LEN];
+  static bool repeating = false;
+  if (repeating) return;
+  if (keycode == AGAIN && record->event.pressed) {
+    for (int i=(AGAIN_BUF_LEN-1)/2;i>=0;i--) {
+      bool match = true;
+      int j = 0;
+      int k = 0;
+      while(true) {
+        keyrecord_t* a = &buffer[AGAIN_BUF_LEN-1-j];
+        while(j<i) {
+          if (a->event.pressed) break;
+          j++;
+          a = &buffer[AGAIN_BUF_LEN-1-j];
+        }
+        keyrecord_t* b = &buffer[AGAIN_BUF_LEN-1-k-i];
+        while(k<i) {
+          if (b->event.pressed) break;
+          k++;
+          b = &buffer[AGAIN_BUF_LEN-1-k-i];
+        }
+        if (j == i && k == i) break;
+        if (j==i || k==i) {
+          match = false;
+          break;
+        }
+        if (a->event.key.row != b->event.key.row ||
+            a->event.key.col != b->event.key.col ||
+            a->event.pressed != b->event.pressed ||
+            false) {
+          match = false;
+          break;
+        }
+        j++;
+        k++;
+      }
+      if (match) {
+        repeating = true;
+        for (int j=0;j<i;j++) {
+          process_record(&buffer[AGAIN_BUF_LEN-1-i+1+j]);
+        }
+        repeating = false;
+        return;
+      }
+    }
+    return;
+  }
+  if (keycode == AGAIN) {
+    // don't record AGAIN up.
+    return;
+  }
+  for (int i=0;i<AGAIN_BUF_LEN-1;i++) {
+    buffer[i] = buffer[i+1];
+  }
+  buffer[AGAIN_BUF_LEN-1] = *record;
+}
+
+
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  process_again(keycode, record);
   switch (keycode) {
     case MACRO1:
       if (record->event.pressed) {
@@ -169,8 +233,8 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
 void keyboard_post_init_user(void) {
   // Customise these values to desired behaviour
   debug_enable=true;
-  //debug_matrix=true;
-  //debug_keyboard=true;
+  debug_matrix=true;
+  debug_keyboard=true;
   //debug_mouse=true;
 }
 
