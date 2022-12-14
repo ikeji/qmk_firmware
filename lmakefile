@@ -1,0 +1,24 @@
+(lazy-make-configulation
+
+  (task "default" ("compile"))
+
+  (task "compile" (
+    "compile-ikeji3dminikeyboard"
+    "compile-ikeji3dminikeyboard2/left"
+    "compile-ikeji3dminikeyboard2/right"
+    "compile-ikeji_laptop"
+    "compile-ikejifold"
+    "compile-ikejiryzenpc"
+	))
+
+  (define (keyboard name)
+	  (task (string-append "compile-" name) ()
+		  (string-append "qmk compile --keyboard " name " --keymap default")))
+
+  (keyboard "ikeji3dminikeyboard")
+  (keyboard "ikeji3dminikeyboard2/left")
+  (keyboard "ikeji3dminikeyboard2/right")
+  (keyboard "ikeji_laptop")
+  (keyboard "ikejifold")
+  (keyboard "ikejiryzenpc")
+)

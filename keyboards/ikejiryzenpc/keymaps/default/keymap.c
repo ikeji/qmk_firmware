@@ -101,65 +101,65 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case MACRO1:
       if (record->event.pressed) {
         register_code(KC_LGUI);
-        register_code(KC_LCTRL);
+        register_code(KC_LCTL);
         register_code(KC_LSFT);
         register_code(KC_LALT);
         tap_code(KC_1);
         unregister_code(KC_LALT);
         unregister_code(KC_LSFT);
-        unregister_code(KC_LCTRL);
+        unregister_code(KC_LCTL);
         unregister_code(KC_LGUI);
       }
       break;
     case MACRO2:
       if (record->event.pressed) {
         register_code(KC_LGUI);
-        register_code(KC_LCTRL);
+        register_code(KC_LCTL);
         register_code(KC_LSFT);
         register_code(KC_LALT);
         tap_code(KC_2);
         unregister_code(KC_LALT);
         unregister_code(KC_LSFT);
-        unregister_code(KC_LCTRL);
+        unregister_code(KC_LCTL);
         unregister_code(KC_LGUI);
       }
       break;
     case MACRO3:
       if (record->event.pressed) {
         register_code(KC_LGUI);
-        register_code(KC_LCTRL);
+        register_code(KC_LCTL);
         register_code(KC_LSFT);
         register_code(KC_LALT);
         tap_code(KC_3);
         unregister_code(KC_LALT);
         unregister_code(KC_LSFT);
-        unregister_code(KC_LCTRL);
+        unregister_code(KC_LCTL);
         unregister_code(KC_LGUI);
       }
       break;
     case MACRO4:
       if (record->event.pressed) {
         register_code(KC_LGUI);
-        register_code(KC_LCTRL);
+        register_code(KC_LCTL);
         register_code(KC_LSFT);
         register_code(KC_LALT);
         tap_code(KC_4);
         unregister_code(KC_LALT);
         unregister_code(KC_LSFT);
-        unregister_code(KC_LCTRL);
+        unregister_code(KC_LCTL);
         unregister_code(KC_LGUI);
       }
       break;
     case MACRO5:
       if (record->event.pressed) {
         register_code(KC_LGUI);
-        register_code(KC_LCTRL);
+        register_code(KC_LCTL);
         register_code(KC_LSFT);
         register_code(KC_LALT);
         tap_code(KC_5);
         unregister_code(KC_LALT);
         unregister_code(KC_LSFT);
-        unregister_code(KC_LCTRL);
+        unregister_code(KC_LCTL);
         unregister_code(KC_LGUI);
       }
       break;
