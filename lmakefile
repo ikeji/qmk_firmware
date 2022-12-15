@@ -12,8 +12,8 @@
 	))
 
   (define (keyboard name)
-	  (task (string-append "compile-" name) ()
-		  (string-append "qmk compile --keyboard " name " --keymap default")))
+	  (task #"compile-~name" ()
+		  #"qmk compile --keyboard ~name --keymap default"))
 
   (keyboard "ikeji3dminikeyboard")
   (keyboard "ikeji3dminikeyboard2/left")
