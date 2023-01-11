@@ -238,3 +238,9 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
       return 500;
   }
 }
+
+void keyboard_post_init_user(void) {
+  debug_enable=true;
+  debug_matrix=true;
+  debug_keyboard=true;
+}
