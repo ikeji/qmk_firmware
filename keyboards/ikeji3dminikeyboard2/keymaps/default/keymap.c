@@ -8,31 +8,32 @@
 
 // Defines the keycodes used by our macros in process_record_user
 enum custom_keycodes {
-  MYKEY = SAFE_RANGE,
-  MACRO1,
-  MACRO2,
-  MACRO3,
-  MACRO4,
-  MACRO5,
+    MYKEY = SAFE_RANGE,
+    MACRO1,
+    MACRO2,
+    MACRO3,
+    MACRO4,
+    MACRO5,
 };
 
-#define CANDE   CTL_T(KC_ESC)
-#define AANDT   ALT_T(KC_TAB)
-#define SANDE   SFT_T(KC_ENT)
-#define SANDS   SFT_T(KC_SPC)
+#define CANDE CTL_T(KC_ESC)
+#define AANDT ALT_T(KC_TAB)
+#define SANDE SFT_T(KC_ENT)
+#define SANDS SFT_T(KC_SPC)
 #define FN_BACK LALT(KC_LEFT)
 #define FN_FORD LALT(KC_RGHT)
 #define FN_BACK LALT(KC_LEFT)
 #define FN_FORD LALT(KC_RGHT)
-#define EANDL   LT(_L, KC_ENT)
-#define BANDL   LT(_L, KC_BSPC)
-#define EANDR   LT(_R, KC_ENT)
-#define EANDG   GUI_T(KC_ENT)
-#define EANDLG  LT(_GUI, KC_ENT)
+#define EANDL LT(_L, KC_ENT)
+#define BANDL LT(_L, KC_BSPC)
+#define EANDR LT(_R, KC_ENT)
+#define EANDG GUI_T(KC_ENT)
+#define EANDLG LT(_GUI, KC_ENT)
 
 #define XXXXXXX KC_NO
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+    // clang-format off
 [_BASE] = LAYOUT( \
   KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC, \
   CANDE ,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT, \
@@ -72,80 +73,80 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   _______, MACRO1,  MACRO2,  MACRO3,  MACRO4,  MACRO5,  _______, _______, FN_BACK, FN_FORD, KC_PGDN, KC_END, \
   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______ \
 ),
+    // clang-format on
 
 };
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  switch (keycode) {
-    case MACRO1:
-      if (record->event.pressed) {
-        register_code(KC_LGUI);
-        register_code(KC_LCTL);
-        register_code(KC_LSFT);
-        register_code(KC_LALT);
-        tap_code(KC_1);
-        unregister_code(KC_LALT);
-        unregister_code(KC_LSFT);
-        unregister_code(KC_LCTL);
-        unregister_code(KC_LGUI);
-      }
-      break;
-    case MACRO2:
-      if (record->event.pressed) {
-        register_code(KC_LGUI);
-        register_code(KC_LCTL);
-        register_code(KC_LSFT);
-        register_code(KC_LALT);
-        tap_code(KC_2);
-        unregister_code(KC_LALT);
-        unregister_code(KC_LSFT);
-        unregister_code(KC_LCTL);
-        unregister_code(KC_LGUI);
-      }
-      break;
-    case MACRO3:
-      if (record->event.pressed) {
-        register_code(KC_LGUI);
-        register_code(KC_LCTL);
-        register_code(KC_LSFT);
-        register_code(KC_LALT);
-        tap_code(KC_3);
-        unregister_code(KC_LALT);
-        unregister_code(KC_LSFT);
-        unregister_code(KC_LCTL);
-        unregister_code(KC_LGUI);
-      }
-      break;
-    case MACRO4:
-      if (record->event.pressed) {
-        register_code(KC_LGUI);
-        register_code(KC_LCTL);
-        register_code(KC_LSFT);
-        register_code(KC_LALT);
-        tap_code(KC_4);
-        unregister_code(KC_LALT);
-        unregister_code(KC_LSFT);
-        unregister_code(KC_LCTL);
-        unregister_code(KC_LGUI);
-      }
-      break;
-    case MACRO5:
-      if (record->event.pressed) {
-        register_code(KC_LGUI);
-        register_code(KC_LCTL);
-        register_code(KC_LSFT);
-        register_code(KC_LALT);
-        tap_code(KC_5);
-        unregister_code(KC_LALT);
-        unregister_code(KC_LSFT);
-        unregister_code(KC_LCTL);
-        unregister_code(KC_LGUI);
-      }
-      break;
-  }
-  return true;
+    switch (keycode) {
+        case MACRO1:
+            if (record->event.pressed) {
+                register_code(KC_LGUI);
+                register_code(KC_LCTL);
+                register_code(KC_LSFT);
+                register_code(KC_LALT);
+                tap_code(KC_1);
+                unregister_code(KC_LALT);
+                unregister_code(KC_LSFT);
+                unregister_code(KC_LCTL);
+                unregister_code(KC_LGUI);
+            }
+            break;
+        case MACRO2:
+            if (record->event.pressed) {
+                register_code(KC_LGUI);
+                register_code(KC_LCTL);
+                register_code(KC_LSFT);
+                register_code(KC_LALT);
+                tap_code(KC_2);
+                unregister_code(KC_LALT);
+                unregister_code(KC_LSFT);
+                unregister_code(KC_LCTL);
+                unregister_code(KC_LGUI);
+            }
+            break;
+        case MACRO3:
+            if (record->event.pressed) {
+                register_code(KC_LGUI);
+                register_code(KC_LCTL);
+                register_code(KC_LSFT);
+                register_code(KC_LALT);
+                tap_code(KC_3);
+                unregister_code(KC_LALT);
+                unregister_code(KC_LSFT);
+                unregister_code(KC_LCTL);
+                unregister_code(KC_LGUI);
+            }
+            break;
+        case MACRO4:
+            if (record->event.pressed) {
+                register_code(KC_LGUI);
+                register_code(KC_LCTL);
+                register_code(KC_LSFT);
+                register_code(KC_LALT);
+                tap_code(KC_4);
+                unregister_code(KC_LALT);
+                unregister_code(KC_LSFT);
+                unregister_code(KC_LCTL);
+                unregister_code(KC_LGUI);
+            }
+            break;
+        case MACRO5:
+            if (record->event.pressed) {
+                register_code(KC_LGUI);
+                register_code(KC_LCTL);
+                register_code(KC_LSFT);
+                register_code(KC_LALT);
+                tap_code(KC_5);
+                unregister_code(KC_LALT);
+                unregister_code(KC_LSFT);
+                unregister_code(KC_LCTL);
+                unregister_code(KC_LGUI);
+            }
+            break;
+    }
+    return true;
 }
-
 
 // uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
 //   switch (keycode) {
@@ -162,17 +163,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 // }
 
 void keyboard_post_init_user(void) {
-  // Customise these values to desired behaviour
-  debug_enable=true;
-  // debug_matrix=true;
-  //debug_keyboard=true;
-  debug_mouse=true;
-  //pointing_device_set_cpi_on_side(true, 1000); //Set cpi on left side to a low value for slower scrolling.
-  //pointing_device_set_cpi_on_side(false, 8000); //Set cpi on right side to a reasonable value for mousing.
+    // Customise these values to desired behaviour
+    debug_enable = true;
+    // debug_matrix=true;
+    // debug_keyboard=true;
+    debug_mouse = true;
+    // pointing_device_set_cpi_on_side(true, 1000); //Set cpi on left side to a low value for slower scrolling.
+    // pointing_device_set_cpi_on_side(false, 8000); //Set cpi on right side to a reasonable value for mousing.
 }
 report_mouse_t pointing_device_task_combined_user(report_mouse_t left_report, report_mouse_t right_report) {
-    left_report.h = left_report.x;
-    left_report.v = left_report.y;
+    left_report.h = left_report.x / 2;
+    left_report.v = left_report.y / 2;
     left_report.x = 0;
     left_report.y = 0;
     return pointing_device_combine_reports(left_report, right_report);
