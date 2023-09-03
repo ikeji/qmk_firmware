@@ -9,15 +9,15 @@
  */
 
 /* disable debug print */
-//#define NO_DEBUG
+// #define NO_DEBUG
 
 /* disable print */
-//#define NO_PRINT
+// #define NO_PRINT
 
 /* disable action features */
-//#define NO_ACTION_LAYER
-//#define NO_ACTION_TAPPING
-//#define NO_ACTION_ONESHOT
+// #define NO_ACTION_LAYER
+// #define NO_ACTION_TAPPING
+// #define NO_ACTION_ONESHOT
 
 #define ANALOG_JOYSTICK_X_AXIS_PIN A0
 #define ANALOG_JOYSTICK_Y_AXIS_PIN A1
@@ -32,3 +32,4 @@
 #define POINTING_DEVICE_INVERT_Y_RIGHT
 #define ANALOG_JOYSTICK_AXIS_MIN 155
 #define ANALOG_JOYSTICK_AXIS_MAX 825
+#define ANALOG_JOYSTICK_SPEED_MAX 10
