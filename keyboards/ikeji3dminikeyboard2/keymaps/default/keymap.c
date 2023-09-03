@@ -4,7 +4,9 @@
 #define _L 1
 #define _R 2
 #define _GUI 3
-#define _FN 6
+#define _FN 4
+#define _MOUSE 5
+#define _EMPTY 6
 
 // Defines the keycodes used by our macros in process_record_user
 enum custom_keycodes {
@@ -29,7 +31,11 @@ enum custom_keycodes {
 #define EANDR LT(_R, KC_ENT)
 #define EANDG GUI_T(KC_ENT)
 #define EANDLG LT(_GUI, KC_ENT)
-
+#define MBTN1 KC_MS_BTN1
+#define MBTN2 KC_MS_BTN2
+#define MBTN3 KC_MS_BTN3
+#define SINS S(KC_INSERT)
+#define SPSCR S(KC_PRINT_SCREEN)
 #define XXXXXXX KC_NO
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -70,7 +76,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_FN] =  LAYOUT( \
   QK_BOOT,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_DEL,  \
   _______, KC_F11,  KC_F12,  _______, _______, _______, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_PGUP, KC_HOME, \
-  _______, MACRO1,  MACRO2,  MACRO3,  MACRO4,  MACRO5,  _______, _______, FN_BACK, FN_FORD, KC_PGDN, KC_END, \
+  _______, MACRO1,  MACRO2,  MACRO3,  MACRO4,  MACRO5,  SINS,    SPSCR,   FN_BACK, FN_FORD, KC_PGDN, KC_END, \
+  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______ \
+),
+[_MOUSE] =  LAYOUT( \
+  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
+  _______, _______, _______, _______, _______, _______, _______, MBTN1,   MBTN2,   MBTN3,   _______, _______, \
+  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
+  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______ \
+),
+[_EMPTY] =  LAYOUT( \
+  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
+  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
+  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______ \
 ),
     // clang-format on
@@ -170,11 +188,35 @@ void keyboard_post_init_user(void) {
     debug_mouse = true;
     // pointing_device_set_cpi_on_side(true, 1000); //Set cpi on left side to a low value for slower scrolling.
     // pointing_device_set_cpi_on_side(false, 8000); //Set cpi on right side to a reasonable value for mousing.
+    set_auto_mouse_layer(_MOUSE); // only required if AUTO_MOUSE_DEFAULT_LAYER is not set to index of <mouse_layer>
+    set_auto_mouse_enable(true);  // always required before the auto mouse feature will work
+}
+int8_t cap1(int8_t in, int16_t *p) {
+    const int8_t CAP = 50;
+    *p += in;
+    if (*p > CAP) {
+        *p -= CAP;
+        return 1;
+    }
+    if (*p < -CAP) {
+        *p += CAP;
+        return -1;
+    }
+    return 0;
+    // return in == 0 ? 0 : (in < 0 ? -1 : 1);
 }
 report_mouse_t pointing_device_task_combined_user(report_mouse_t left_report, report_mouse_t right_report) {
-    left_report.h = left_report.x / 2;
-    left_report.v = left_report.y / 2;
+    static int16_t hp = 0, yp = 0;
+    left_report.h = cap1(left_report.x, &hp);
+    left_report.v = cap1(left_report.y, &yp);
     left_report.x = 0;
     left_report.y = 0;
+
+    if (!get_auto_mouse_toggle()) {
+        if (-5 < right_report.x && right_report.x < 5 && -5 < right_report.y && right_report.y < 5) {
+            right_report.x = 0;
+            right_report.y = 0;
+        }
+    }
     return pointing_device_combine_reports(left_report, right_report);
 }
