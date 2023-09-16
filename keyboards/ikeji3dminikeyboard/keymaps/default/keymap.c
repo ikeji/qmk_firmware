@@ -50,10 +50,10 @@ enum custom_keycodes {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_BASE] = LAYOUT( \
-  KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC, \
-  CANDE ,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT, \
-  KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_ENT, \
-  MO(_FN), KC_LALT, KC_LCTL, BANDL,   SANDS,KC_LGUI,MO(_GUI),   SANDS,      EANDR, KC_RGUI, AGAIN, MO(_FN) \
+  KC_TAB  , KC_Q    , KC_W    , KC_E   , KC_R  , KC_T    , KC_Y     , KC_U  , KC_I    , KC_O    , KC_P    , KC_BSPC   , \
+  CANDE   , KC_A    , KC_S    , KC_D   , KC_F  , KC_G    , KC_H     , KC_J  , KC_K    , KC_L    , KC_SCLN , KC_QUOT   , \
+  KC_LSFT , KC_Z    , KC_X    , KC_C   , KC_V  , KC_B    , KC_N     , KC_M  , KC_COMM , KC_DOT  , KC_SLSH , KC_ENT    , \
+  MO(_FN) , KC_LALT , KC_LCTL , MO(_L) , SANDS , KC_LGUI , MO(_GUI) , SANDS , EANDR   , KC_RGUI , AGAIN   , MO(_FN) \
 ),
 
 [_L] = LAYOUT( \
