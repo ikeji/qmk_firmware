@@ -259,7 +259,7 @@ int8_t axisToMouseComponent(pin_t pin, int16_t origin, uint8_t maxSpeed, int8_t 
     }
 }
 
-void pointing_device_task(void) {
+bool pointing_device_task(void) {
     report_mouse_t report = pointing_device_get_report();
 
     // todo read as one vector
@@ -294,6 +294,7 @@ void pointing_device_task(void) {
 
     pointing_device_set_report(report);
     pointing_device_send();
+    return false;
 }
 
 void pointing_device_init(void) {

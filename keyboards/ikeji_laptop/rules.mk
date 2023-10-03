@@ -1,3 +1,3 @@
 # This file intentionally left blank
 BLUETOOTH_ENABLE = yes
-BLUETOOTH_DRIVER = RN42
+BLUETOOTH_DRIVER = rn42
