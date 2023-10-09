@@ -2,18 +2,12 @@
 
   (task "default" ("compile"))
 
-  (task "compile" (
-    "compile-ikeji3dminikeyboard"
-    "compile-ikeji3dminikeyboard2/left"
-    "compile-ikeji3dminikeyboard2/right"
-    "compile-ikeji_laptop"
-    "compile-ikejifold"
-    "compile-ikejiryzenpc"
-	))
-
+  (define *keyboards* '())
   (define (keyboard name)
-	  (task #"compile-~name" ()
-		  #"qmk compile --keyboard ~name --keymap default"))
+    (task #"compile-~name" ()
+      #"qmk compile --keyboard ~name --keymap default"
+    )
+    (set! *keyboards* (cons name *keyboards*)))
 
   (keyboard "ikeji3dminikeyboard")
   (keyboard "ikeji3dminikeyboard2/left")
@@ -21,4 +15,16 @@
   (keyboard "ikeji_laptop")
   (keyboard "ikejifold")
   (keyboard "ikejiryzenpc")
+  (keyboard "ikeji_hansen_writing_ball")
+
+  (task-impl "keyboard-list"
+    (list)
+    (map (lambda (k) #"@echo ~k") (reverse *keyboards*)))
+
+  (task-impl "compile"
+    (map (lambda (n) #"compile-~n") *keyboards*)
+    (list))
+
+  (task "clean" ()
+    "make clean")
 )
