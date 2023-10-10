@@ -7,6 +7,9 @@
     (task #"compile-~name" ()
       #"qmk compile --keyboard ~name --keymap default"
     )
+    (task #"flash-~name" ()
+      #"qmk flash --keyboard ~name --keymap default"
+    )
     (set! *keyboards* (cons name *keyboards*)))
 
   (keyboard "ikeji3dminikeyboard")

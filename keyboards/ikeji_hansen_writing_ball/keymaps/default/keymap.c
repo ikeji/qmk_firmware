@@ -5,239 +5,164 @@
 
 #include "print.h"
 
-#define _BASE 0
-#define _L 1
-#define _R 2
-#define _GUI 3
-#define _FN 6
-
-// Defines the keycodes used by our macros in process_record_user
-enum custom_keycodes {
-  MYKEY = SAFE_RANGE,
-  MACRO1,
-  MACRO2,
-  MACRO3,
-  MACRO4,
-  MACRO5,
-  AGAIN,
+// Each layer gets a name for readability, which is then used in the keymap matrix below.
+// The underscores don't mean anything - you can have a layer called STUFF or any other name.
+// Layer names don't all need to be of the same length, obviously, and you can also skip them
+// entirely and just use numbers.
+enum layer_names {
+    _QWERTY,
+    _LOWER,
+    _RAISE,
+    _ADJUST
 };
 
-#define CANDE   CTL_T(KC_ESC)
-#define AANDT   ALT_T(KC_TAB)
-#define SANDE   SFT_T(KC_ENT)
-#define SANDS   SFT_T(KC_SPC)
-#define FN_BACK LALT(KC_LEFT)
-#define FN_FORD LALT(KC_RGHT)
-#define FN_BACK LALT(KC_LEFT)
-#define FN_FORD LALT(KC_RGHT)
-#define EANDL   LT(_L, KC_ENT)
-#define BANDL   LT(_L, KC_BSPC)
-#define EANDR   LT(_R, KC_ENT)
-#define EANDS   LT(_R, KC_SPC)
-#define EANDG   GUI_T(KC_ENT)
-#define EANDLG  LT(_GUI, KC_ENT)
+enum custom_keycodes {
+  QWERTY = SAFE_RANGE,
+  LOWER,
+  RAISE,
+  ADJUST,
+};
 
-
-#define MBTN1   KC_MS_BTN1
-#define MBTN2   KC_MS_BTN2
-#define MBTN3   KC_MS_BTN3
-
-#define XXXXXXX KC_NO
+// Defines for task manager and such
+#define CALTDEL LCTL(LALT(KC_DEL))
+#define TSKMGR LCTL(LSFT(KC_ESC))
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-[_BASE] = LAYOUT_ortho_4x10 ( \
-  KC_Q,            KC_W,    KC_E,    KC_R,           KC_T,           KC_Y,          KC_U,          KC_I,     KC_O,    KC_P,    \
-  KC_A,            KC_S,    KC_D,    KC_F,           KC_G,           KC_H,          KC_J,          KC_K,     KC_L,    KC_SCLN, \
-  KC_Z,            KC_X,    KC_C,    KC_V,           KC_B,           KC_N,          KC_M,          KC_COMM,  KC_DOT,  KC_SLSH, \
-  LT(_FN, KC_SPC), KC_LALT, KC_LGUI, LT(_L, KC_ESC), CTL_T(KC_BSPC), SFT_T(KC_ENT), LT(_R, KC_SPC),MO(_GUI), KC_RCTL, LT(_FN, KC_ENT) \
+
+/* Qwerty
+ *
+ * ,----------------------------------.           ,----------------------------------.
+ * |   Q  |   W  |   E  |   R  |   T  |           |   Y  |   U  |   I  |   O  |   P  |
+ * |------+------+------+------+------|           |------+------+------+------+------|
+ * |   A  |   S  |   D  |   F  |   G  |           |   H  |   J  |   K  |   L  |   ;  |
+ * |------+------+------+------+------|           |------+------+------+------+------|
+ * |   Z  |   X  |   C  |   V  |   B  |           |   N  |   M  |   ,  |   .  |   /  |
+ * `----------------------------------'           `----------------------------------'
+ *                  ,--------------------.    ,------,-------------.
+ *                  | Ctrl | LOWER|      |    |      | RAISE| Shift|
+ *                  `-------------| Space|    |BckSpc|------+------.
+ *                                |      |    |      |
+ *                                `------'    `------'
+ */
+[_QWERTY] = LAYOUT_ortho_4x10(
+  KC_Q  , KC_W  , KC_E    , KC_R  , KC_T   , KC_Y    , KC_U  , KC_I          , KC_O   , KC_P    ,
+  KC_A  , KC_S  , KC_D    , KC_F  , KC_G   , KC_H    , KC_J  , KC_K          , KC_L   , KC_SCLN ,
+  KC_Z  , KC_X  , KC_C    , KC_V  , KC_B   , KC_N    , KC_M  , KC_COMM       , KC_DOT , KC_SLSH ,
+  KC_NO , KC_NO , KC_LCTL , LOWER , KC_SPC , KC_BSPC , RAISE , OSM(MOD_LSFT) , KC_NO  , KC_NO
 ),
 
-[_L] = LAYOUT_ortho_4x10( \
-  KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC,   KC_AMPR,   KC_ASTR, KC_LPRN, KC_RPRN, \
-  KC_TILD, KC_PIPE, KC_QUOT, _______, _______, _______,   KC_UNDS,   KC_PLUS, KC_LCBR, KC_RCBR, \
-  _______, _______, _______, _______, _______, _______,S(KC_NUHS),S(KC_NUBS), _______, _______, \
-  _______, _______, _______, _______, _______, _______,   _______,   _______, _______, _______ \
+/* Raise
+ *
+ * ,----------------------------------.           ,----------------------------------.
+ * |   1  |   2  |   3  |   4  |   5  |           |   6  |   7  |   8  |   9  |   0  |
+ * |------+------+------+------+------|           |------+------+------+------+------|
+ * |  Tab | Left | Down |  Up  | Right|           |      |   -  |   =  |   [  |   ]  |
+ * |------+------+------+------+------|           |------+------+------+------+------|
+ * |  Ctrl|   `  |  GUI |  Alt |      |           |      |      |      |   \  |   '  |
+ * `----------------------------------'           `----------------------------------'
+ *                  ,--------------------.    ,------,-------------.
+ *                  |      | LOWER|      |    |      | RAISE|      |
+ *                  `-------------|      |    |      |------+------.
+ *                                |      |    |      |
+ *                                `------'    `------'
+ */
+[_RAISE] = LAYOUT_ortho_4x10(
+  KC_1    , KC_2    , KC_3    , KC_4    , KC_5    , KC_6    , KC_7    , KC_8    , KC_9    , KC_0    ,
+  KC_TAB  , KC_LEFT , KC_DOWN , KC_UP   , KC_RGHT , _______ , KC_MINS , KC_EQL  , KC_LBRC , KC_RBRC ,
+  KC_LCTL , KC_GRV  , KC_LGUI , KC_LALT , _______ , _______ , _______ , _______ , KC_BSLS , KC_QUOT ,
+  KC_NO   , KC_NO   , _______ , _______ , _______ , _______ , _______ , _______ , KC_NO   , KC_NO
 ),
 
-[_R] = LAYOUT_ortho_4x10( \
-  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    \
-  KC_GRV,  KC_BSLS,S(KC_QUOT),_______,_______, _______, KC_MINS, KC_EQL,  KC_LBRC, KC_RBRC, \
-  _______, _______, _______, _______, _______, _______, KC_NUHS, KC_NUBS, _______, _______, \
-  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______  \
+/* Lower
+ *
+ * ,----------------------------------.           ,----------------------------------.
+ * |   !  |   @  |   #  |   $  |   %  |           |   ^  |   &  |   *  |   (  |   )  |
+ * |------+------+------+------+------|           |------+------+------+------+------|
+ * |  Esc |      |      |      |      |           |      |   _  |   +  |   {  |   }  |
+ * |------+------+------+------+------|           |------+------+------+------+------|
+ * |  Caps|   ~  |      |      |      |           |      |      |      |   |  |   "  |
+ * `----------------------------------'           `----------------------------------'
+ *                  ,--------------------.    ,------,-------------.
+ *                  |      | LOWER|      |    |      | RAISE|  Del |
+ *                  `-------------|      |    | Enter|------+------.
+ *                                |      |    |      |
+ *                                `------'    `------'
+ */
+[_LOWER] = LAYOUT_ortho_4x10(
+  KC_EXLM , KC_AT   , KC_HASH , KC_DLR  , KC_PERC , KC_CIRC , KC_AMPR , KC_ASTR , KC_LPRN , KC_RPRN ,
+  KC_ESC  , _______ , _______ , _______ , _______ , _______ , KC_UNDS , KC_PLUS , KC_LCBR , KC_RCBR ,
+  KC_CAPS , KC_TILD , _______ , _______ , _______ , _______ , _______ , _______ , KC_PIPE , KC_DQT  ,
+  KC_NO   , KC_NO   , _______ , _______ , _______ , KC_ENT  , _______ , KC_DEL  , KC_NO   , KC_NO
 ),
 
-#define G(kc) LGUI(kc)
-
-[_GUI] = LAYOUT_ortho_4x10( \
-  G(KC_1), G(KC_2), G(KC_3), G(KC_4), G(KC_5),  G(KC_6), G(KC_7), G(KC_8), G(KC_9), G(KC_0), \
-  G(KC_Q), G(KC_W), G(KC_E), G(KC_R), _______,  KC_INS,  _______, _______, _______, _______, \
-  G(KC_Z), G(KC_X), G(KC_C), G(KC_V), _______,  _______, _______, _______, _______, _______, \
-  _______, _______, _______, _______, _______,  _______, _______, _______, _______, _______ \
-),
-
-#undef G
-
-
-[_FN] = LAYOUT_ortho_4x10( \
-  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,    KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  \
-  KC_F11,  KC_F12,  QK_BOOT, _______, _______,  KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_PGUP, \
-  MACRO1,  MACRO2,  MACRO3,  MACRO4,  MACRO5,   KC_HOME, KC_END,  FN_BACK, FN_FORD, KC_PGDN, \
-  _______, _______, _______, _______, _______,  _______, _______, _______, _______, _______ \
-),
-
+/* Adjust (Lower + Raise)
+ *
+ * ,----------------------------------.           ,----------------------------------.
+ * |  F1  |  F2  |  F3  |  F4  |  F5  |           |   F6 |  F7  |  F8  |  F9  |  F10 |
+ * |------+------+------+------+------|           |------+------+------+------+------|
+ * |  F11 |  F12 |      |      |      |           |      |      |      |Taskmg|caltde|
+ * |------+------+------+------+------|           |------+------+------+------+------|
+ * | Reset|      |      |      |      |           |      |      |      |      |      |
+ * `----------------------------------'           `----------------------------------'
+ *                  ,--------------------.    ,------,-------------.
+ *                  |      | LOWER|      |    |      | RAISE|      |
+ *                  `-------------|      |    |      |------+------.
+ *                                |      |    |      |
+ *                                `------'    `------'
+ */
+[_ADJUST] = LAYOUT_ortho_4x10(
+  KC_F1   , KC_F2   , KC_F3   , KC_F4   , KC_F5   , KC_F6   , KC_F7   , KC_F8   , KC_F9   , KC_F10  ,
+  KC_F11  , KC_F12  , _______ , _______ , _______ , _______ , _______ , _______ , TSKMGR  , CALTDEL ,
+  QK_BOOT , _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______ , _______ ,
+  KC_NO   , KC_NO   , _______ , _______ , _______ , _______ , _______ , _______ , KC_NO   , KC_NO
+)
 };
 
-#define AGAIN_BUF_LEN 256
-
-void process_again(uint16_t keycode, keyrecord_t *record) {
-  static keyrecord_t buffer[AGAIN_BUF_LEN];
-  static bool repeating = false;
-  if (repeating) return;
-  if (keycode == AGAIN && record->event.pressed) {
-    for (int i=(AGAIN_BUF_LEN-1)/2;i>=0;i--) {
-      bool match = true;
-      int j = 0;
-      int k = 0;
-      while(true) {
-        keyrecord_t* a = &buffer[AGAIN_BUF_LEN-1-j];
-        while(j<i) {
-          if (a->event.pressed) break;
-          j++;
-          a = &buffer[AGAIN_BUF_LEN-1-j];
-        }
-        keyrecord_t* b = &buffer[AGAIN_BUF_LEN-1-k-i];
-        while(k<i) {
-          if (b->event.pressed) break;
-          k++;
-          b = &buffer[AGAIN_BUF_LEN-1-k-i];
-        }
-        if (j == i && k == i) break;
-        if (j==i || k==i) {
-          match = false;
-          break;
-        }
-        if (a->event.key.row != b->event.key.row ||
-            a->event.key.col != b->event.key.col ||
-            a->event.pressed != b->event.pressed ||
-            false) {
-          match = false;
-          break;
-        }
-        j++;
-        k++;
-      }
-      if (match) {
-        repeating = true;
-        for (int j=0;j<i;j++) {
-          process_record(&buffer[AGAIN_BUF_LEN-1-i+1+j]);
-        }
-        repeating = false;
-        return;
-      }
-    }
-    return;
-  }
-  if (keycode == AGAIN) {
-    // don't record AGAIN up.
-    return;
-  }
-  for (int i=0;i<AGAIN_BUF_LEN-1;i++) {
-    buffer[i] = buffer[i+1];
-  }
-  buffer[AGAIN_BUF_LEN-1] = *record;
+void persistant_default_layer_set(uint16_t default_layer) {
+  eeconfig_update_default_layer(default_layer);
+  default_layer_set(default_layer);
 }
 
-
-
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  process_again(keycode, record);
   switch (keycode) {
-    case MACRO1:
+    case QWERTY:
       if (record->event.pressed) {
-        register_code(KC_LGUI);
-        register_code(KC_LCTL);
-        register_code(KC_LSFT);
-        register_code(KC_LALT);
-        tap_code(KC_1);
-        unregister_code(KC_LALT);
-        unregister_code(KC_LSFT);
-        unregister_code(KC_LCTL);
-        unregister_code(KC_LGUI);
+        #ifdef AUDIO_ENABLE
+          PLAY_SONG(tone_qwerty);
+        #endif
+        persistant_default_layer_set(1UL<<_QWERTY);
       }
+      return false;
       break;
-    case MACRO2:
+    case LOWER:
       if (record->event.pressed) {
-        register_code(KC_LGUI);
-        register_code(KC_LCTL);
-        register_code(KC_LSFT);
-        register_code(KC_LALT);
-        tap_code(KC_2);
-        unregister_code(KC_LALT);
-        unregister_code(KC_LSFT);
-        unregister_code(KC_LCTL);
-        unregister_code(KC_LGUI);
+        layer_on(_LOWER);
+        update_tri_layer(_LOWER, _RAISE, _ADJUST);
+      } else {
+        layer_off(_LOWER);
+        update_tri_layer(_LOWER, _RAISE, _ADJUST);
       }
+      return false;
       break;
-    case MACRO3:
+    case RAISE:
       if (record->event.pressed) {
-        register_code(KC_LGUI);
-        register_code(KC_LCTL);
-        register_code(KC_LSFT);
-        register_code(KC_LALT);
-        tap_code(KC_3);
-        unregister_code(KC_LALT);
-        unregister_code(KC_LSFT);
-        unregister_code(KC_LCTL);
-        unregister_code(KC_LGUI);
+        layer_on(_RAISE);
+        update_tri_layer(_LOWER, _RAISE, _ADJUST);
+      } else {
+        layer_off(_RAISE);
+        update_tri_layer(_LOWER, _RAISE, _ADJUST);
       }
+      return false;
       break;
-    case MACRO4:
+    case ADJUST:
       if (record->event.pressed) {
-        register_code(KC_LGUI);
-        register_code(KC_LCTL);
-        register_code(KC_LSFT);
-        register_code(KC_LALT);
-        tap_code(KC_4);
-        unregister_code(KC_LALT);
-        unregister_code(KC_LSFT);
-        unregister_code(KC_LCTL);
-        unregister_code(KC_LGUI);
+        layer_on(_ADJUST);
+      } else {
+        layer_off(_ADJUST);
       }
-      break;
-    case MACRO5:
-      if (record->event.pressed) {
-        register_code(KC_LGUI);
-        register_code(KC_LCTL);
-        register_code(KC_LSFT);
-        register_code(KC_LALT);
-        tap_code(KC_5);
-        unregister_code(KC_LALT);
-        unregister_code(KC_LSFT);
-        unregister_code(KC_LCTL);
-        unregister_code(KC_LGUI);
-      }
+      return false;
       break;
   }
   return true;
 }
 
-uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
-  switch (keycode) {
-    case SANDS:
-      return 3000;
-    case EANDL:
-    case EANDR:
-      return 100;
-    case CANDE:
-      return 200;
-    default:
-      return 500;
-  }
-}
-void keyboard_post_init_user(void) {
-  // Customise these values to desired behaviour
-  debug_enable=true;
-  debug_matrix=true;
-  debug_keyboard=true;
-  //debug_mouse=true;
-}
