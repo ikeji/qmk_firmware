@@ -213,10 +213,14 @@ report_mouse_t pointing_device_task_combined_user(report_mouse_t left_report, re
     left_report.y = 0;
 
     if (!get_auto_mouse_toggle()) {
-        if (-5 < right_report.x && right_report.x < 5 && -5 < right_report.y && right_report.y < 5) {
+        if (-10 < right_report.x && right_report.x < 10 && -10 < right_report.y && right_report.y < 10) {
             right_report.x = 0;
             right_report.y = 0;
         }
+    }
+    if (layer_state_is(_L) || layer_state_is(_R)) {
+        right_report.x /= 10;
+        right_report.y /= 10;
     }
     return pointing_device_combine_reports(left_report, right_report);
 }

@@ -1,2 +1,3 @@
 #pragma once
 #define POINTING_DEVICE_AUTO_MOUSE_ENABLE
+#define AUTO_MOUSE_TIME 3000
