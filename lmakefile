@@ -15,6 +15,7 @@
   (keyboard "ikeji3dminikeyboard")
   (keyboard "ikeji3dminikeyboard2/left")
   (keyboard "ikeji3dminikeyboard2/right")
+  (keyboard "ikeji3dminikeyboard3")
   (keyboard "ikeji_laptop")
   (keyboard "ikejifold")
   (keyboard "ikejiryzenpc")
