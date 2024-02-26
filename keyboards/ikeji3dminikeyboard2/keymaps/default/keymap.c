@@ -224,3 +224,11 @@ report_mouse_t pointing_device_task_combined_user(report_mouse_t left_report, re
     }
     return pointing_device_combine_reports(left_report, right_report);
 }
+
+const uint16_t PROGMEM test_combo1[] = {KC_H, KC_J, COMBO_END};
+const uint16_t PROGMEM test_combo2[] = {KC_Y, KC_U, COMBO_END};
+const uint16_t PROGMEM test_combo3[] = {KC_F, KC_G, COMBO_END};
+combo_t                key_combos[]  = {
+    COMBO(test_combo1, MBTN1),
+    COMBO(test_combo2, MBTN2),
+};
