@@ -10,6 +10,7 @@
 #define _FN 4
 #define _MOUSE 5
 #define _EMPTY 6
+#define _DVTM 7
 
 // Defines the keycodes used by our macros in process_record_user
 enum custom_keycodes {
@@ -32,6 +33,7 @@ enum custom_keycodes {
 #define EANDL LT(_L, KC_ENT)
 #define BANDL LT(_L, KC_BSPC)
 #define EANDR LT(_R, KC_ENT)
+#define TANDD LT(_DVTM, KC_TAB)
 #define EANDG GUI_T(KC_ENT)
 #define EANDLG LT(_GUI, KC_ENT)
 #define MBTN1 KC_MS_BTN1
@@ -46,10 +48,10 @@ enum custom_keycodes {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     // clang-format off
 [_BASE] = LAYOUT( \
-  KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC, \
-  CANDE ,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT, \
-  KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_ENT, \
-  MO(_FN), KC_LALT, KC_LCTL, BANDL,   SANDS,KC_LGUI,MO(_GUI),   SANDS,      EANDR, KC_RGUI, KC_RALT, MO(_FN) \
+  TANDD   , KC_Q    , KC_W    , KC_E  , KC_R  , KC_T    , KC_Y     , KC_U  , KC_I    , KC_O    , KC_P    , KC_BSPC   , \
+  CANDE   , KC_A    , KC_S    , KC_D  , KC_F  , KC_G    , KC_H     , KC_J  , KC_K    , KC_L    , KC_SCLN , KC_QUOT   , \
+  KC_LSFT , KC_Z    , KC_X    , KC_C  , KC_V  , KC_B    , KC_N     , KC_M  , KC_COMM , KC_DOT  , KC_SLSH , KC_ENT    , \
+  MO(_FN) , KC_LALT , KC_LCTL , BANDL , SANDS , KC_LGUI , MO(_GUI) , SANDS , EANDR   , KC_RGUI , KC_RALT , MO(_FN) \
 ),
 
 [_L] = LAYOUT( \
@@ -84,6 +86,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   _______, MACRO1,  MACRO2,  MACRO3,  MACRO4,  MACRO5,  SINS,    SPSCR,   FN_BACK, FN_FORD, KC_PGDN, KC_END, \
   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______ \
 ),
+[_DVTM] =  LAYOUT( \
+  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
+  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
+  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
+  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______ \
+),
 [_MOUSE] =  LAYOUT( \
   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
   _______, _______, _______, _______, _______, _______, _______, MBTN1,   MBTN2,   MBTN3,   _______, _______, \
@@ -101,6 +109,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    if (IS_LAYER_ON(_DVTM) && record->event.pressed) {
+        register_code(KC_LCTL);
+        tap_code(KC_G);
+        unregister_code(KC_LCTL);
+    }
     switch (keycode) {
         case MACRO1:
             if (record->event.pressed) {
@@ -229,3 +242,15 @@ void keyboard_post_init_user(void) {
 //     }
 //     return pointing_device_combine_reports(left_report, right_report);
 // }
+
+const uint16_t PROGMEM combo_rt[] = {KC_R, KC_T, COMBO_END};
+const uint16_t PROGMEM combo_fg[] = {KC_F, KC_G, COMBO_END};
+const uint16_t PROGMEM combo_vb[] = {KC_V, KC_B, COMBO_END};
+const uint16_t PROGMEM combo_yu[] = {KC_Y, KC_U, COMBO_END};
+const uint16_t PROGMEM combo_hj[] = {KC_H, KC_J, COMBO_END};
+const uint16_t PROGMEM combo_nm[] = {KC_N, KC_M, COMBO_END};
+combo_t                key_combos[]  = {
+    COMBO(combo_hj, MBTN1),
+    COMBO(combo_fg, MBTN1),
+    COMBO(combo_yu, MBTN2),
+};
